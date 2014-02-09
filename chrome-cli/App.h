@@ -34,6 +34,6 @@
 - (void)executeJavascriptInTab:(Arguments *)args;
 - (void)printSourceFromActiveTab:(Arguments *)args;
 - (void)printSourceFromTab:(Arguments *)args;
-- (void)printVersion:(Arguments *)args;
+- (void)printChromeVersion:(Arguments *)args;
 
 @end
