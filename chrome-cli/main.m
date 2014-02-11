@@ -53,6 +53,7 @@ int main(int argc, const char * argv[])
     [argonaut add:@"execute <javascript> -t <id>" target:app action:@selector(executeJavascriptInTab:) description:@"Execute javascript in specific tab"];
 
     [argonaut add:@"chrome version" target:app action:@selector(printChromeVersion:) description:@"Print Chrome version"];
+    [argonaut add:@"version" target:app action:@selector(printVersion:) description:@"Print application version"];
 
 
     if (![argonaut parse]) {

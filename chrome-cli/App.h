@@ -36,5 +36,6 @@
 - (void)printSourceFromActiveTab:(Arguments *)args;
 - (void)printSourceFromTab:(Arguments *)args;
 - (void)printChromeVersion:(Arguments *)args;
+- (void)printVersion:(Arguments *)args;
 
 @end

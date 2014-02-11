@@ -10,6 +10,7 @@
 #import "chrome.h"
 
 
+static NSString * const kVersion = @"1.1.0";
 static NSString * const kJsPrintSource = @"(function() { return document.getElementsByTagName('html')[0].outerHTML })();";
 
 
@@ -266,6 +267,10 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     printf("%s\n", self->chrome.version.UTF8String);
 }
 
+
+- (void)printVersion:(Arguments *)args {
+    printf("%s\n", kVersion.UTF8String);
+}
 
 
 #pragma mark Helper functions
