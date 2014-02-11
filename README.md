@@ -11,7 +11,7 @@ with Chrome.
 - Save the 'chrome-cli' binary to a location in your PATH (i.e. `/usr/local/bin/`)
 
 ### Downloads
-- [chrome-cli-darwin-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnWHpzLVJRU1YxUWc)
+- [chrome-cli-darwin-1.1.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnVWpSNHBKdmhWRmM)
 
 ## Usage
     chrome-cli -h  (Print help)
@@ -24,6 +24,7 @@ with Chrome.
     chrome-cli info -t <id>  (Print info for specific tab)
     chrome-cli open <url>  (Open url in new tab)
     chrome-cli open <url> -n  (Open url in new window)
+    chrome-cli open <url> -n -i  (Open url in new incognito window)
     chrome-cli open <url> -t <id>  (Open url in specific tab)
     chrome-cli open <url> -w <id>  (Open url in new tab in specific window)
     chrome-cli close  (Close active tab)
@@ -41,6 +42,7 @@ with Chrome.
     chrome-cli execute <javascript>  (Execute javascript in active tab)
     chrome-cli execute <javascript> -t <id>  (Execute javascript in specific tab)
     chrome-cli chrome version  (Print Chrome version)
+    chrome-cli version  (Print application version)
 
 
 ## Examples
