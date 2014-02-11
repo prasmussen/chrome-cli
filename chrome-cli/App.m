@@ -89,6 +89,18 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     [self printInfo:tab];
 }
 
+- (void)openUrlInNewIncognitoWindow:(Arguments *)args {
+    NSString *url = [args asString:@"url"];
+    
+    chromeWindow *window = [[[self->chrome classForScriptingClass:@"window"] alloc] initWithProperties:@{@"mode": @"incognito"}];
+    [self->chrome.windows addObject:window];
+    
+    chromeTab *tab = [window.tabs firstObject];
+    tab.URL = url;
+    
+    [self printInfo:tab];
+}
+
 - (void)openUrlInTab:(Arguments *)args {
     NSInteger tabId = [args asInteger:@"id"];
     NSString *url = [args asString:@"url"];

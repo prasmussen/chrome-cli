@@ -28,6 +28,7 @@ int main(int argc, const char * argv[])
 
     [argonaut add:@"open <url>" target:app action:@selector(openUrlInNewTab:) description:@"Open url in new tab"];
     [argonaut add:@"open <url> -n" target:app action:@selector(openUrlInNewWindow:) description:@"Open url in new window"];
+    [argonaut add:@"open <url> -n -i" target:app action:@selector(openUrlInNewIncognitoWindow:) description:@"Open url in new incognito window"];
     [argonaut add:@"open <url> -t <id>" target:app action:@selector(openUrlInTab:) description:@"Open url in specific tab"];
     [argonaut add:@"open <url> -w <id>" target:app action:@selector(openUrlInWindow:) description:@"Open url in new tab in specific window"];
 

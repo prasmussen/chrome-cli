@@ -18,6 +18,7 @@
 - (void)printTabInfo:(Arguments *)args;
 - (void)openUrlInNewTab:(Arguments *)args;
 - (void)openUrlInNewWindow:(Arguments *)args;
+- (void)openUrlInNewIncognitoWindow:(Arguments *)args;
 - (void)openUrlInTab:(Arguments *)args;
 - (void)openUrlInWindow:(Arguments *)args;
 - (void)reloadActiveTab:(Arguments *)args;
