@@ -37,10 +37,22 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
             } else {
                 printf("[%ld] %s\n", (long)tab.id, tab.title.UTF8String);
             }
-
         }
     }
 }
+
+- (void)listTabsLinks:(Arguments *)args {
+    for (chromeWindow *window in self->chrome.windows) {
+        for (chromeTab *tab in window.tabs) {
+            if (self->chrome.windows.count > 1) {
+                printf("[%ld:%ld] %s\n", (long)window.id, (long)tab.id, tab.URL.UTF8String);
+            } else {
+                printf("[%ld] %s\n", (long)tab.id, tab.URL.UTF8String);
+            }
+        }
+    }
+}
+
 
 - (void)listTabsInWindow:(Arguments *)args {
     NSInteger windowId = [args asInteger:@"id"];
@@ -52,6 +64,19 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
     for (chromeTab *tab in window.tabs) {
         printf("[%ld] %s\n", (long)tab.id, tab.title.UTF8String);
+    }
+}
+
+- (void)listTabsLinksInWindow:(Arguments *)args {
+    NSInteger windowId = [args asInteger:@"id"];
+    chromeWindow *window = [self findWindow:windowId];
+    
+    if (!window) {
+        return;
+    }
+    
+    for (chromeTab *tab in window.tabs) {
+        printf("[%ld] %s\n", (long)tab.id, tab.URL.UTF8String);
     }
 }
 
