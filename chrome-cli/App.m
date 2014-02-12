@@ -10,6 +10,7 @@
 #import "chrome.h"
 
 
+static NSString * const kVersion = @"1.1.0";
 static NSString * const kJsPrintSource = @"(function() { return document.getElementsByTagName('html')[0].outerHTML })();";
 
 
@@ -111,6 +112,18 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     chromeTab *tab = [window.tabs firstObject];
     tab.URL = url;
 
+    [self printInfo:tab];
+}
+
+- (void)openUrlInNewIncognitoWindow:(Arguments *)args {
+    NSString *url = [args asString:@"url"];
+    
+    chromeWindow *window = [[[self->chrome classForScriptingClass:@"window"] alloc] initWithProperties:@{@"mode": @"incognito"}];
+    [self->chrome.windows addObject:window];
+    
+    chromeTab *tab = [window.tabs firstObject];
+    tab.URL = url;
+    
     [self printInfo:tab];
 }
 
@@ -279,6 +292,10 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     printf("%s\n", self->chrome.version.UTF8String);
 }
 
+
+- (void)printVersion:(Arguments *)args {
+    printf("%s\n", kVersion.UTF8String);
+}
 
 
 #pragma mark Helper functions

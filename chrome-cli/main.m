@@ -31,6 +31,7 @@ int main(int argc, const char * argv[])
 
     [argonaut add:@"open <url>" target:app action:@selector(openUrlInNewTab:) description:@"Open url in new tab"];
     [argonaut add:@"open <url> -n" target:app action:@selector(openUrlInNewWindow:) description:@"Open url in new window"];
+    [argonaut add:@"open <url> -n -i" target:app action:@selector(openUrlInNewIncognitoWindow:) description:@"Open url in new incognito window"];
     [argonaut add:@"open <url> -t <id>" target:app action:@selector(openUrlInTab:) description:@"Open url in specific tab"];
     [argonaut add:@"open <url> -w <id>" target:app action:@selector(openUrlInWindow:) description:@"Open url in new tab in specific window"];
 
@@ -55,6 +56,7 @@ int main(int argc, const char * argv[])
     [argonaut add:@"execute <javascript> -t <id>" target:app action:@selector(executeJavascriptInTab:) description:@"Execute javascript in specific tab"];
 
     [argonaut add:@"chrome version" target:app action:@selector(printChromeVersion:) description:@"Print Chrome version"];
+    [argonaut add:@"version" target:app action:@selector(printVersion:) description:@"Print application version"];
 
 
     if (![argonaut parse]) {
