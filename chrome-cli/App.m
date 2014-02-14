@@ -248,7 +248,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     if (tab) {
         id data = [tab executeJavascript:js];
         if (data) {
-            printf("%s\n", [(NSString *)data UTF8String]);
+            printf("%s\n", [[NSString stringWithFormat:@"%@", data] UTF8String]);
         }
     }
 }
@@ -261,7 +261,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     if (tab) {
         id data = [tab executeJavascript:js];
         if (data) {
-            printf("%s\n", [(NSString *)data UTF8String]);
+            printf("%s\n", [[NSString stringWithFormat:@"%@", data] UTF8String]);
         }
     }
 }
