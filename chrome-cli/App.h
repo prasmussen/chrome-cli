@@ -33,6 +33,9 @@
 - (void)goBackInTab:(Arguments *)args;
 - (void)goForwardActiveTab:(Arguments *)args;
 - (void)goForwardInTab:(Arguments *)args;
+- (void)enterPresentationModeWithActiveTab:(Arguments *)args;
+- (void)enterPresentationModeWithTab:(Arguments *)args;
+- (void)exitPresentationMode:(Arguments *)args;
 - (void)executeJavascriptInActiveTab:(Arguments *)args;
 - (void)executeJavascriptInTab:(Arguments *)args;
 - (void)printSourceFromActiveTab:(Arguments *)args;

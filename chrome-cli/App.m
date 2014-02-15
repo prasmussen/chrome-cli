@@ -241,6 +241,30 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 }
 
+- (void)enterPresentationModeWithActiveTab:(Arguments *)args {
+    [[self activeWindow] enterPresentationMode];
+}
+
+- (void)enterPresentationModeWithTab:(Arguments *)args {
+    NSInteger tabId = [args asInteger:@"id"];
+
+    // Find tab and the window that the tab resides in
+    chromeTab *tab = [self findTab:tabId];
+    chromeWindow *window = [self findWindowWithTab:tab];
+
+    // Set the tab active
+    [self setTabActive:tab inWindow:window];
+
+    // Enter presentaion mode
+    [window enterPresentationMode];
+}
+
+- (void)exitPresentationMode:(Arguments *)args {
+    for (chromeWindow *window in self->chrome.windows) {
+        [window exitPresentationMode];
+    }
+}
+
 - (void)executeJavascriptInActiveTab:(Arguments *)args {
     NSString *js = [args asString:@"javascript"];
 
@@ -319,6 +343,11 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     return [self activeWindow].activeTab;
 }
 
+- (void)setTabActive:(chromeTab *)tab inWindow:(chromeWindow *)window {
+    NSInteger index = [self findTabIndex:tab inWindow:window];
+    window.activeTabIndex = index;
+}
+
 - (chromeTab *)findTab:(NSInteger)tabId {
     for (chromeWindow *window in self->chrome.windows) {
         chromeTab *tab = [window.tabs objectWithID:@(tabId)];
@@ -328,6 +357,32 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 
     return nil;
+}
+
+- (chromeWindow *)findWindowWithTab:(chromeTab *)tab {
+    for (chromeWindow *window in self->chrome.windows) {
+        for (chromeTab *t in window.tabs) {
+            if (t.id == tab.id) {
+                return window;
+            }
+        }
+    }
+
+    return nil;
+}
+
+- (NSInteger)findTabIndex:(chromeTab *)tab inWindow:(chromeWindow *)window {
+    // Tab index starts at 1
+    int i = 1;
+
+    for (chromeTab *t in window.tabs) {
+        if (t.id == tab.id) {
+            return i;
+        }
+        i++;
+    }
+
+    return NSNotFound;
 }
 
 - (void)printInfo:(chromeTab *)tab {
