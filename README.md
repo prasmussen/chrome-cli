@@ -11,7 +11,7 @@ with Chrome.
 - Save the 'chrome-cli' binary to a location in your PATH (i.e. `/usr/local/bin/`)
 
 ### Downloads
-- [chrome-cli-darwin-1.2.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnWU1iRlZhRUI1WTA)
+- [chrome-cli-darwin-1.3.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnTm1aMG02aEpXem8)
 
 ## Usage
     chrome-cli -h  (Print help)
@@ -39,6 +39,9 @@ with Chrome.
     chrome-cli back -t <id>  (Navigate back in specific tab)
     chrome-cli forward  (Navigate forward in active tab)
     chrome-cli forward -t <id>  (Navigate forward in specific tab)
+    chrome-cli presentation  (Enter presentation mode with the active tab)
+    chrome-cli presentation -t <id>  (Enter presentation mode with a specific tab)
+    chrome-cli presentation exit  (Exit presentation mode)
     chrome-cli source  (Print source from active tab)
     chrome-cli source -t <id>  (Print source from specific tab)
     chrome-cli execute <javascript>  (Execute javascript in active tab)
