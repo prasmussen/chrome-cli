@@ -10,7 +10,7 @@
 #import "chrome.h"
 
 
-static NSString * const kVersion = @"1.2.0";
+static NSString * const kVersion = @"1.3.0";
 static NSString * const kJsPrintSource = @"(function() { return document.getElementsByTagName('html')[0].outerHTML })();";
 
 
