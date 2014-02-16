@@ -13,10 +13,6 @@
 int main(int argc, const char * argv[])
 {
     App *app = [[App alloc] init];
-    if (![app ready]) {
-        return 1;
-    }
-
     Argonaut *argonaut = [[Argonaut alloc] init];
 
     [argonaut add:@"-h" target:argonaut action:@selector(printUsage:) description:@"Print help"];
@@ -68,9 +64,15 @@ int main(int argc, const char * argv[])
 
 
     if (![argonaut parse]) {
-        printf("No matching handler found\n\n");
-        [argonaut printUsage];
+        printf("No matching handler found\n");
+        return 1;
     }
+
+    if (![app ready]) {
+        return 1;
+    }
+
+    [argonaut run];
 
     return 0;
 }

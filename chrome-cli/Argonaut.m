@@ -11,7 +11,6 @@
 
 @implementation Argonaut {
     NSMutableArray *handlers;
-    NSString *appName;
 }
 
 
@@ -28,21 +27,37 @@
 }
 
 - (BOOL)parse {
-    NSMutableArray *args = [NSMutableArray arrayWithArray:[[NSProcessInfo processInfo] arguments]];
+    Handler *handler = [self findHandler:[self args]];
+    return handler != nil;
+}
 
-    // Grab binary name
-    self->appName = [[args.firstObject pathComponents] lastObject];
+- (void)run {
+    NSArray *args = [self args];
+    Handler *handler = [self findHandler:args];
+    [handler call:args];
+}
+
+- (NSString *)appName {
+    NSString *path = [[NSProcessInfo processInfo] arguments].firstObject;
+    return [path pathComponents].lastObject;
+}
+
+- (NSArray *)args {
+    NSMutableArray *args = [NSMutableArray arrayWithArray:[[NSProcessInfo processInfo] arguments]];
 
     // Remove application path argument
     [args removeObjectAtIndex:0];
 
+    return args;
+}
+
+- (Handler *)findHandler:(NSArray *)args {
     for (Handler *handler in self->handlers) {
         if ([handler match:args]) {
-            [handler call:args];
-            return true;
+            return handler;
         }
     }
-    return false;
+    return nil;
 }
 
 - (void)printUsage:(Arguments *)args {
@@ -53,7 +68,7 @@
     printf("Usage:\n");
 
     for (Handler *handler in self->handlers) {
-        printf("%s %s  (%s)\n", self->appName.UTF8String, handler.pattern.UTF8String, handler.description.UTF8String);
+        printf("%s %s  (%s)\n", [self appName].UTF8String, handler.pattern.UTF8String, handler.description.UTF8String);
     }
 }
 

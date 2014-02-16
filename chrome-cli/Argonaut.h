@@ -13,6 +13,7 @@
 
 - (void)add:(NSString *)pattern target:(NSObject *)target action:(SEL)action description:(NSString *)description;
 - (BOOL)parse;
+- (void)run;
 - (void)printUsage;
 - (void)printUsage:(Arguments *)args;
 
