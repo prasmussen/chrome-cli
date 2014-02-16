@@ -350,7 +350,15 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
 - (chromeWindow *)activeWindow {
     // The first object seems to alway be the active window
-    return self->chrome.windows.firstObject;
+    chromeWindow *window = self->chrome.windows.firstObject;
+
+    // Create new window if no window exist
+    if (!window) {
+        window = [[[self->chrome classForScriptingClass:@"window"] alloc] init];
+        [self->chrome.windows addObject:window];
+    }
+
+    return window;
 }
 
 - (chromeWindow *)findWindow:(NSInteger)windowId {
