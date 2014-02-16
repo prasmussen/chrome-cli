@@ -13,6 +13,10 @@
 int main(int argc, const char * argv[])
 {
     App *app = [[App alloc] init];
+    if (![app ready]) {
+        return 1;
+    }
+
     Argonaut *argonaut = [[Argonaut alloc] init];
 
     [argonaut add:@"-h" target:argonaut action:@selector(printUsage:) description:@"Print help"];

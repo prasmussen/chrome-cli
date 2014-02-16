@@ -11,6 +11,7 @@
 
 @interface App : NSObject
 
+- (BOOL)ready;
 - (void)listWindows:(Arguments *)args;
 - (void)listTabs:(Arguments *)args;
 - (void)listTabsLinks:(Arguments *)args;

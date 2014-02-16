@@ -10,6 +10,7 @@
 #import "chrome.h"
 
 
+static NSInteger const kMaxLaunchTimeInSeconds = 15;
 static NSString * const kVersion = @"1.3.0";
 static NSString * const kJsPrintSource = @"(function() { return document.getElementsByTagName('html')[0].outerHTML })();";
 
@@ -22,6 +23,29 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     self = [super init];
     self->chrome = [SBApplication applicationWithBundleIdentifier:@"com.google.Chrome"];
     return self;
+}
+
+- (BOOL)ready {
+    if ([self->chrome isRunning]) {
+        return true;
+    }
+
+    printf("Waiting for chrome to start...\n");
+    [self->chrome activate];
+    NSDate *start = [NSDate date];
+
+    // Wait until chrome has one or more windows or give up if MaxLaunchTime is reached
+    while ([[NSDate date] timeIntervalSinceDate:start] < kMaxLaunchTimeInSeconds) {
+        // Sleep for 100ms
+        usleep(100000);
+
+        if ([self->chrome.windows count] > 0) {
+            return true;
+        }
+    }
+
+    printf("Chrome did not start for %ld seconds\n", kMaxLaunchTimeInSeconds);
+    return false;
 }
 
 - (void)listWindows:(Arguments *)args {
