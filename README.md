@@ -11,7 +11,8 @@ with Chrome.
 - Save the 'chrome-cli' binary to a location in your PATH (i.e. `/usr/local/bin/`)
 
 ### Downloads
-- [chrome-cli-darwin-1.3.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnTm1aMG02aEpXem8)
+- [chrome-cli-darwin-1.3.1-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnZU1hVGV4cUUtU0U)
+- [canary-cli-darwin-1.3.1-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnRk5rS3k3NS16alU)
 
 ## Usage
     chrome-cli -h  (Print help)
