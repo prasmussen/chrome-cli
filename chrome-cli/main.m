@@ -53,6 +53,16 @@ int main(int argc, const char * argv[])
     [argonaut add:@"presentation -t <id>" target:app action:@selector(enterPresentationModeWithTab:) description:@"Enter presentation mode with a specific tab"];
     [argonaut add:@"presentation exit" target:app action:@selector(exitPresentationMode:) description:@"Exit presentation mode"];
 
+    [argonaut add:@"size" target:app action:@selector(printActiveWindowSize:) description:@"Print size of active window"];
+    [argonaut add:@"size -w <id>" target:app action:@selector(printWindowSize:) description:@"Print size of specific window"];
+    [argonaut add:@"size <width> <height>" target:app action:@selector(setActiveWindowSize:) description:@"Set size of active window"];
+    [argonaut add:@"size <width> <height> -w <id>" target:app action:@selector(setWindowSize:) description:@"Set size of specific window"];
+
+    [argonaut add:@"position" target:app action:@selector(printActiveWindowPosition:) description:@"Print position of active window"];
+    [argonaut add:@"position -w <id>" target:app action:@selector(printWindowPosition:) description:@"Print position of specific window"];
+    [argonaut add:@"position <x> <y>" target:app action:@selector(setActiveWindowPosition:) description:@"Set position of active window"];
+    [argonaut add:@"position <x> <y> -w <id>" target:app action:@selector(setWindowPosition:) description:@"Set position of specific window"];
+
     [argonaut add:@"source" target:app action:@selector(printSourceFromActiveTab:) description:@"Print source from active tab"];
     [argonaut add:@"source -t <id>" target:app action:@selector(printSourceFromTab:) description:@"Print source from specific tab"];
 

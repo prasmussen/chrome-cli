@@ -289,6 +289,70 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 }
 
+- (void)printActiveWindowSize:(Arguments *)args {
+    chromeWindow *window = [self activeWindow];
+    CGSize size = window.bounds.size;
+    printf("width: %f, height: %f\n", size.width, size.height);
+}
+
+- (void)printWindowSize:(Arguments *)args {
+    NSInteger windowId = [args asInteger:@"id"];
+    chromeWindow *window = [self findWindow:windowId];
+    CGSize size = window.bounds.size;
+    printf("width: %f, height: %f\n", size.width, size.height);
+}
+
+- (void)setActiveWindowSize:(Arguments *)args {
+    float width = [args asFloat:@"width"];
+    float height = [args asFloat:@"height"];
+
+    chromeWindow *window = [self activeWindow];
+    CGPoint origin = window.bounds.origin;
+    window.bounds = NSMakeRect(origin.x, origin.y, width, height);
+}
+
+- (void)setWindowSize:(Arguments *)args {
+    NSInteger windowId = [args asInteger:@"id"];
+    float width = [args asFloat:@"width"];
+    float height = [args asFloat:@"height"];
+
+    chromeWindow *window = [self findWindow:windowId];
+    CGPoint origin = window.bounds.origin;
+    window.bounds = NSMakeRect(origin.x, origin.y, width, height);
+}
+
+- (void)printActiveWindowPosition:(Arguments *)args {
+    chromeWindow *window = [self activeWindow];
+    CGPoint origin = window.bounds.origin;
+    printf("x: %f, y: %f\n", origin.x, origin.y);
+}
+
+- (void)printWindowPosition:(Arguments *)args {
+    NSInteger windowId = [args asInteger:@"id"];
+    chromeWindow *window = [self findWindow:windowId];
+    CGPoint origin = window.bounds.origin;
+    printf("x: %f, y: %f\n", origin.x, origin.y);
+}
+
+- (void)setActiveWindowPosition:(Arguments *)args {
+    float x = [args asFloat:@"x"];
+    float y = [args asFloat:@"y"];
+
+    chromeWindow *window = [self activeWindow];
+    CGSize size = window.bounds.size;
+    window.bounds = NSMakeRect(x, y, size.width, size.height);
+}
+
+- (void)setWindowPosition:(Arguments *)args {
+    NSInteger windowId = [args asInteger:@"id"];
+    float x = [args asFloat:@"x"];
+    float y = [args asFloat:@"y"];
+
+    chromeWindow *window = [self findWindow:windowId];
+    CGSize size = window.bounds.size;
+    window.bounds = NSMakeRect(x, y, size.width, size.height);
+}
+
 - (void)executeJavascriptInActiveTab:(Arguments *)args {
     NSString *js = [args asString:@"javascript"];
 

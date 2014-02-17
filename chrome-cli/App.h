@@ -37,6 +37,14 @@
 - (void)enterPresentationModeWithActiveTab:(Arguments *)args;
 - (void)enterPresentationModeWithTab:(Arguments *)args;
 - (void)exitPresentationMode:(Arguments *)args;
+- (void)printActiveWindowSize:(Arguments *)args;
+- (void)printWindowSize:(Arguments *)args;
+- (void)setActiveWindowSize:(Arguments *)args;
+- (void)setWindowSize:(Arguments *)args;
+- (void)printActiveWindowPosition:(Arguments *)args;
+- (void)printWindowPosition:(Arguments *)args;
+- (void)setActiveWindowPosition:(Arguments *)args;
+- (void)setWindowPosition:(Arguments *)args;
 - (void)executeJavascriptInActiveTab:(Arguments *)args;
 - (void)executeJavascriptInTab:(Arguments *)args;
 - (void)printSourceFromActiveTab:(Arguments *)args;
