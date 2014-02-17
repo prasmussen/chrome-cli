@@ -11,8 +11,8 @@ with Chrome.
 - Save the 'chrome-cli' binary to a location in your PATH (i.e. `/usr/local/bin/`)
 
 ### Downloads
-- [chrome-cli-darwin-1.3.1-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnZU1hVGV4cUUtU0U)
-- [canary-cli-darwin-1.3.1-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnRk5rS3k3NS16alU)
+- [chrome-cli-darwin-1.4.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnSW9WRmltd1drdzg)
+- [canary-cli-darwin-1.4.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnZmd6YkNQTVRfdGM)
 
 ## Usage
     chrome-cli -h  (Print help)
@@ -43,6 +43,14 @@ with Chrome.
     chrome-cli presentation  (Enter presentation mode with the active tab)
     chrome-cli presentation -t <id>  (Enter presentation mode with a specific tab)
     chrome-cli presentation exit  (Exit presentation mode)
+    chrome-cli size  (Print size of active window)
+    chrome-cli size -w <id>  (Print size of specific window)
+    chrome-cli size <width> <height>  (Set size of active window)
+    chrome-cli size <width> <height> -w <id>  (Set size of specific window)
+    chrome-cli position  (Print position of active window)
+    chrome-cli position -w <id>  (Print position of specific window)
+    chrome-cli position <x> <y>  (Set position of active window)
+    chrome-cli position <x> <y> -w <id>  (Set position of specific window)
     chrome-cli source  (Print source from active tab)
     chrome-cli source -t <id>  (Print source from specific tab)
     chrome-cli execute <javascript>  (Execute javascript in active tab)
