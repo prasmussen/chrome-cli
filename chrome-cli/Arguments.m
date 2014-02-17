@@ -23,8 +23,11 @@
 }
 
 - (NSInteger)asInteger:(NSString *)name {
-    NSString *value = (NSString *)[self->dict objectForKey:name];
-    return [value integerValue];
+    return [[self asString:name] integerValue];
+}
+
+- (float)asFloat:(NSString *)name {
+    return [[self asString:name] floatValue];
 }
 
 @end

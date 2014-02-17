@@ -13,5 +13,6 @@
 - (id)initWithDictionary:(NSDictionary *)dict;
 - (NSString *)asString:(NSString *)name;
 - (NSInteger)asInteger:(NSString *)name;
+- (float)asFloat:(NSString *)name;
 
 @end
