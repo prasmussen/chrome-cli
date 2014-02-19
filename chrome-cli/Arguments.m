@@ -9,17 +9,17 @@
 #import "Arguments.h"
 
 @implementation Arguments {
-    NSDictionary *dict;
+    NSDictionary *_dict;
 }
 
 - (id)initWithDictionary:(NSDictionary *)dict {
     self = [super init];
-    self->dict = dict;
+    self->_dict = dict;
     return self;
 }
 
 - (NSString *)asString:(NSString *)name {
-    return (NSString *)[self->dict objectForKey:name];
+    return (NSString *)[self->_dict objectForKey:name];
 }
 
 - (NSInteger)asInteger:(NSString *)name {

@@ -10,38 +10,38 @@
 #import "Arguments.h"
 
 @implementation Handler {
-    NSArray *args;
-    NSObject *target;
-    SEL action;
-    NSString *description;
+    NSArray *_args;
+    NSObject *_target;
+    SEL _action;
+    NSString *_description;
 }
 
 - (id)initWithArgs:(NSArray *)args target:(NSObject *)target action:(SEL)action description:(NSString *)description {
     self = [super init];
 
-    self->args = args;
-    self->target = target;
-    self->action = action;
-    self->description = description;
+    self->_args = args;
+    self->_target = target;
+    self->_action = action;
+    self->_description = description;
 
     return self;
 }
 
 - (NSString *)pattern {
-    return [self->args componentsJoinedByString:@" "];
+    return [self->_args componentsJoinedByString:@" "];
 }
 
 - (NSString *)description {
-    return self->description;
+    return self->_description;
 }
 
 - (BOOL)match:(NSArray *)args {
-    if (args.count != self->args.count) {
+    if (args.count != self->_args.count) {
         return false;
     }
 
     for (int i = 0; i < args.count; i++) {
-        NSString *argA = [self->args objectAtIndex:i];
+        NSString *argA = [self->_args objectAtIndex:i];
         NSString *argB = [args objectAtIndex:i];
 
         // Don't compare capture group arguments
@@ -61,7 +61,7 @@
 
     // Grab capture groups and store them as a key value pair in the dictionary
     for (int i = 0; i < args.count; i++) {
-        NSString *argA = [self->args objectAtIndex:i];
+        NSString *argA = [self->_args objectAtIndex:i];
         NSString *argB = [args objectAtIndex:i];
 
         if ([self isCaptureGroup:argA]) {
@@ -71,7 +71,7 @@
     }
 
     Arguments *arguments = [[Arguments alloc] initWithDictionary:captureGroups];
-    [self->target performSelector:self->action withObject:arguments];
+    [self->_target performSelector:self->_action withObject:arguments];
 }
 
 - (BOOL)isCaptureGroup:(NSString *)arg {
