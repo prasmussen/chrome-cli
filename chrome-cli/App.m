@@ -15,49 +15,45 @@ static NSString * const kVersion = @"1.4.0";
 static NSString * const kJsPrintSource = @"(function() { return document.getElementsByTagName('html')[0].outerHTML })();";
 
 
-@implementation App {
-    chromeApplication *chrome;
-}
+@implementation App
 
-- (id)init {
-    self = [super init];
-    self->chrome = [SBApplication applicationWithBundleIdentifier:@"com.google.Chrome"];
-    return self;
-}
 
-- (BOOL)ready {
-    if ([self->chrome isRunning]) {
-        return true;
+- (chromeApplication *)chrome {
+    chromeApplication *chrome = [SBApplication applicationWithBundleIdentifier:@"com.google.Chrome"];
+
+    if ([chrome isRunning]) {
+        return chrome;
     }
-
+    
     printf("Waiting for chrome to start...\n");
-    [self->chrome activate];
+    [chrome activate];
     NSDate *start = [NSDate date];
-
+    
     // Wait until chrome has one or more windows or give up if MaxLaunchTime is reached
     while ([[NSDate date] timeIntervalSinceDate:start] < kMaxLaunchTimeInSeconds) {
         // Sleep for 100ms
         usleep(100000);
-
-        if ([self->chrome.windows count] > 0) {
-            return true;
+        
+        if ([chrome.windows count] > 0) {
+            return chrome;
         }
     }
-
+    
     printf("Chrome did not start for %ld seconds\n", kMaxLaunchTimeInSeconds);
-    return false;
+    exit(1);
 }
 
+
 - (void)listWindows:(Arguments *)args {
-    for (chromeWindow *window in self->chrome.windows) {
+    for (chromeWindow *window in self.chrome.windows) {
         printf("[%ld] %s\n", (long)window.id, window.name.UTF8String);
     }
 }
 
 - (void)listTabs:(Arguments *)args {
-    for (chromeWindow *window in self->chrome.windows) {
+    for (chromeWindow *window in self.chrome.windows) {
         for (chromeTab *tab in window.tabs) {
-            if (self->chrome.windows.count > 1) {
+            if (self.chrome.windows.count > 1) {
                 printf("[%ld:%ld] %s\n", (long)window.id, (long)tab.id, tab.title.UTF8String);
             } else {
                 printf("[%ld] %s\n", (long)tab.id, tab.title.UTF8String);
@@ -67,9 +63,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)listTabsLinks:(Arguments *)args {
-    for (chromeWindow *window in self->chrome.windows) {
+    for (chromeWindow *window in self.chrome.windows) {
         for (chromeTab *tab in window.tabs) {
-            if (self->chrome.windows.count > 1) {
+            if (self.chrome.windows.count > 1) {
                 printf("[%ld:%ld] %s\n", (long)window.id, (long)tab.id, tab.URL.UTF8String);
             } else {
                 printf("[%ld] %s\n", (long)tab.id, tab.URL.UTF8String);
@@ -119,7 +115,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 - (void)openUrlInNewTab:(Arguments *)args {
     NSString *url = [args asString:@"url"];
 
-    chromeTab *tab = [[[self->chrome classForScriptingClass:@"tab"] alloc] init];
+    chromeTab *tab = [[[self.chrome classForScriptingClass:@"tab"] alloc] init];
     chromeWindow *window = [self activeWindow];
     [window.tabs addObject:tab];
     tab.URL = url;
@@ -130,8 +126,8 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 - (void)openUrlInNewWindow:(Arguments *)args {
     NSString *url = [args asString:@"url"];
 
-    chromeWindow *window = [[[self->chrome classForScriptingClass:@"window"] alloc] init];
-    [self->chrome.windows addObject:window];
+    chromeWindow *window = [[[self.chrome classForScriptingClass:@"window"] alloc] init];
+    [self.chrome.windows addObject:window];
 
     chromeTab *tab = [window.tabs firstObject];
     tab.URL = url;
@@ -142,8 +138,8 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 - (void)openUrlInNewIncognitoWindow:(Arguments *)args {
     NSString *url = [args asString:@"url"];
     
-    chromeWindow *window = [[[self->chrome classForScriptingClass:@"window"] alloc] initWithProperties:@{@"mode": @"incognito"}];
-    [self->chrome.windows addObject:window];
+    chromeWindow *window = [[[self.chrome classForScriptingClass:@"window"] alloc] initWithProperties:@{@"mode": @"incognito"}];
+    [self.chrome.windows addObject:window];
     
     chromeTab *tab = [window.tabs firstObject];
     tab.URL = url;
@@ -166,7 +162,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     NSInteger windowId = [args asInteger:@"id"];
     NSString *url = [args asString:@"url"];
 
-    chromeTab *tab = [[[self->chrome classForScriptingClass:@"tab"] alloc] init];
+    chromeTab *tab = [[[self.chrome classForScriptingClass:@"tab"] alloc] init];
     chromeWindow *window = [self findWindow:windowId];
 
     if (!window) {
@@ -284,7 +280,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)exitPresentationMode:(Arguments *)args {
-    for (chromeWindow *window in self->chrome.windows) {
+    for (chromeWindow *window in self.chrome.windows) {
         [window exitPresentationMode];
     }
 }
@@ -401,7 +397,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)printChromeVersion:(Arguments *)args {
-    printf("%s\n", self->chrome.version.UTF8String);
+    printf("%s\n", self.chrome.version.UTF8String);
 }
 
 
@@ -414,19 +410,19 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
 - (chromeWindow *)activeWindow {
     // The first object seems to alway be the active window
-    chromeWindow *window = self->chrome.windows.firstObject;
+    chromeWindow *window = self.chrome.windows.firstObject;
 
     // Create new window if no window exist
     if (!window) {
-        window = [[[self->chrome classForScriptingClass:@"window"] alloc] init];
-        [self->chrome.windows addObject:window];
+        window = [[[self.chrome classForScriptingClass:@"window"] alloc] init];
+        [self.chrome.windows addObject:window];
     }
 
     return window;
 }
 
 - (chromeWindow *)findWindow:(NSInteger)windowId {
-    chromeWindow *window = [self->chrome.windows objectWithID:@(windowId)];
+    chromeWindow *window = [self.chrome.windows objectWithID:@(windowId)];
 
     if (window && window.id) {
         return window;
@@ -445,7 +441,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (chromeTab *)findTab:(NSInteger)tabId {
-    for (chromeWindow *window in self->chrome.windows) {
+    for (chromeWindow *window in self.chrome.windows) {
         chromeTab *tab = [window.tabs objectWithID:@(tabId)];
         if (tab && tab.id) {
             return tab;
@@ -456,7 +452,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (chromeWindow *)findWindowWithTab:(chromeTab *)tab {
-    for (chromeWindow *window in self->chrome.windows) {
+    for (chromeWindow *window in self.chrome.windows) {
         for (chromeTab *t in window.tabs) {
             if (t.id == tab.id) {
                 return window;

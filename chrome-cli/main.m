@@ -78,10 +78,6 @@ int main(int argc, const char * argv[])
         return 1;
     }
 
-    if (![app ready]) {
-        return 1;
-    }
-
     [argonaut run];
 
     return 0;
