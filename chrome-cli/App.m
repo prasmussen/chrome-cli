@@ -24,21 +24,21 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     if ([chrome isRunning]) {
         return chrome;
     }
-    
+
     printf("Waiting for chrome to start...\n");
     [chrome activate];
     NSDate *start = [NSDate date];
-    
+
     // Wait until chrome has one or more windows or give up if MaxLaunchTime is reached
     while ([[NSDate date] timeIntervalSinceDate:start] < kMaxLaunchTimeInSeconds) {
         // Sleep for 100ms
         usleep(100000);
-        
+
         if ([chrome.windows count] > 0) {
             return chrome;
         }
     }
-    
+
     printf("Chrome did not start for %ld seconds\n", kMaxLaunchTimeInSeconds);
     exit(1);
 }
@@ -91,11 +91,11 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 - (void)listTabsLinksInWindow:(Arguments *)args {
     NSInteger windowId = [args asInteger:@"id"];
     chromeWindow *window = [self findWindow:windowId];
-    
+
     if (!window) {
         return;
     }
-    
+
     for (chromeTab *tab in window.tabs) {
         printf("[%ld] %s\n", (long)tab.id, tab.URL.UTF8String);
     }
@@ -137,13 +137,13 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
 - (void)openUrlInNewIncognitoWindow:(Arguments *)args {
     NSString *url = [args asString:@"url"];
-    
+
     chromeWindow *window = [[[self.chrome classForScriptingClass:@"window"] alloc] initWithProperties:@{@"mode": @"incognito"}];
     [self.chrome.windows addObject:window];
-    
+
     chromeTab *tab = [window.tabs firstObject];
     tab.URL = url;
-    
+
     [self printInfo:tab];
 }
 
