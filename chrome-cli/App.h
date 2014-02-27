@@ -33,6 +33,7 @@
 - (void)goBackInTab:(Arguments *)args;
 - (void)goForwardActiveTab:(Arguments *)args;
 - (void)goForwardInTab:(Arguments *)args;
+- (void)activateTab:(Arguments *)args;
 - (void)enterPresentationModeWithActiveTab:(Arguments *)args;
 - (void)enterPresentationModeWithTab:(Arguments *)args;
 - (void)exitPresentationMode:(Arguments *)args;

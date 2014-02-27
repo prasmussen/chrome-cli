@@ -49,6 +49,8 @@ int main(int argc, const char * argv[])
     [argonaut add:@"forward" target:app action:@selector(goForwardActiveTab:) description:@"Navigate forward in active tab"];
     [argonaut add:@"forward -t <id>" target:app action:@selector(goForwardInTab:) description:@"Navigate forward in specific tab"];
 
+    [argonaut add:@"activate -t <id>" target:app action:@selector(activateTab:) description:@"Activate specific tab"];
+
     [argonaut add:@"presentation" target:app action:@selector(enterPresentationModeWithActiveTab:) description:@"Enter presentation mode with the active tab"];
     [argonaut add:@"presentation -t <id>" target:app action:@selector(enterPresentationModeWithTab:) description:@"Enter presentation mode with a specific tab"];
     [argonaut add:@"presentation exit" target:app action:@selector(exitPresentationMode:) description:@"Exit presentation mode"];

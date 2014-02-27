@@ -261,6 +261,16 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 }
 
+- (void)activateTab:(Arguments *)args {
+    NSInteger tabId = [args asInteger:@"id"];
+
+    // Find tab and the window that the tab resides in
+    chromeTab *tab = [self findTab:tabId];
+    chromeWindow *window = [self findWindowWithTab:tab];
+
+    [self setTabActive:tab inWindow:window];
+}
+
 - (void)enterPresentationModeWithActiveTab:(Arguments *)args {
     [[self activeWindow] enterPresentationMode];
 }
