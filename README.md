@@ -8,9 +8,14 @@ It is a native binary that uses the Scripting Bridge to communicate
 with Chrome.
 
 ## Installation
+
+#### Homebrew
+    brew install chrome-cli
+
+#### Manual
 - Save the 'chrome-cli' binary to a location in your PATH (i.e. `/usr/local/bin/`)
 
-### Downloads
+##### Downloads
 - [chrome-cli-darwin-1.5.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnYThnLXQydFVIU3c)
 - [canary-cli-darwin-1.5.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnTmZ2VmxRdmxRaFU)
 
