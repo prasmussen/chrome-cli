@@ -18,6 +18,7 @@ with Chrome.
 ##### Downloads
 - [chrome-cli-darwin-1.5.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnYThnLXQydFVIU3c)
 - [canary-cli-darwin-1.5.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnTmZ2VmxRdmxRaFU)
+- [chromium-cli-darwin-1.5.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnXy1BTF9fQ0ZVN00)
 
 ## Usage
     chrome-cli -h  (Print help)
