@@ -34,9 +34,6 @@
 - (void)goForwardActiveTab:(Arguments *)args;
 - (void)goForwardInTab:(Arguments *)args;
 - (void)activateTab:(Arguments *)args;
-- (void)enterPresentationModeWithActiveTab:(Arguments *)args;
-- (void)enterPresentationModeWithTab:(Arguments *)args;
-- (void)exitPresentationMode:(Arguments *)args;
 - (void)printActiveWindowSize:(Arguments *)args;
 - (void)printWindowSize:(Arguments *)args;
 - (void)setActiveWindowSize:(Arguments *)args;

@@ -51,10 +51,6 @@ int main(int argc, const char * argv[])
 
     [argonaut add:@"activate -t <id>" target:app action:@selector(activateTab:) description:@"Activate specific tab"];
 
-    [argonaut add:@"presentation" target:app action:@selector(enterPresentationModeWithActiveTab:) description:@"Enter presentation mode with the active tab"];
-    [argonaut add:@"presentation -t <id>" target:app action:@selector(enterPresentationModeWithTab:) description:@"Enter presentation mode with a specific tab"];
-    [argonaut add:@"presentation exit" target:app action:@selector(exitPresentationMode:) description:@"Exit presentation mode"];
-
     [argonaut add:@"size" target:app action:@selector(printActiveWindowSize:) description:@"Print size of active window"];
     [argonaut add:@"size -w <id>" target:app action:@selector(printWindowSize:) description:@"Print size of specific window"];
     [argonaut add:@"size <width> <height>" target:app action:@selector(setActiveWindowSize:) description:@"Set size of active window"];

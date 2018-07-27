@@ -271,30 +271,6 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     [self setTabActive:tab inWindow:window];
 }
 
-- (void)enterPresentationModeWithActiveTab:(Arguments *)args {
-    [[self activeWindow] enterPresentationMode];
-}
-
-- (void)enterPresentationModeWithTab:(Arguments *)args {
-    NSInteger tabId = [args asInteger:@"id"];
-
-    // Find tab and the window that the tab resides in
-    chromeTab *tab = [self findTab:tabId];
-    chromeWindow *window = [self findWindowWithTab:tab];
-
-    // Set the tab active
-    [self setTabActive:tab inWindow:window];
-
-    // Enter presentaion mode
-    [window enterPresentationMode];
-}
-
-- (void)exitPresentationMode:(Arguments *)args {
-    for (chromeWindow *window in self.chrome.windows) {
-        [window exitPresentationMode];
-    }
-}
-
 - (void)printActiveWindowSize:(Arguments *)args {
     chromeWindow *window = [self activeWindow];
     CGSize size = window.bounds.size;
