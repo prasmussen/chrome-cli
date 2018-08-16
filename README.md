@@ -20,6 +20,12 @@ with Chrome.
 - [canary-cli-darwin-1.5.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnTmZ2VmxRdmxRaFU)
 - [chromium-cli-darwin-1.5.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnXy1BTF9fQ0ZVN00)
 
+
+## JavaScript execution
+To execute javascript you must first allow it under `View > Developer > Allow JavaScript from Apple Events`.
+More details [here](https://www.chromium.org/developers/applescript). Thanks to @kevinfrommelt and @paulp for providing this information.
+
+
 ## Usage
     chrome-cli -h  (Print help)
     chrome-cli --help  (Print help)
