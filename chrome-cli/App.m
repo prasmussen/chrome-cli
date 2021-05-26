@@ -11,15 +11,23 @@
 
 
 static NSInteger const kMaxLaunchTimeInSeconds = 15;
-static NSString * const kVersion = @"1.6.0";
+static NSString * const kVersion = @"1.7.0";
 static NSString * const kJsPrintSource = @"(function() { return document.getElementsByTagName('html')[0].outerHTML })();";
 
 
-@implementation App
+@implementation App {
+    NSString *bundleIdentifier;
+}
+
+- (id)initWithBundleIdentifier:(NSString *)bundleIdentifier {
+    self = [super init];
+    self->bundleIdentifier = bundleIdentifier;
+    return self;
+}
 
 
 - (chromeApplication *)chrome {
-    chromeApplication *chrome = [SBApplication applicationWithBundleIdentifier:@"com.google.Chrome"];
+    chromeApplication *chrome = [SBApplication applicationWithBundleIdentifier:self->bundleIdentifier];
 
     if ([chrome isRunning]) {
         return chrome;

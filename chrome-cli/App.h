@@ -11,6 +11,7 @@
 
 @interface App : NSObject
 
+- (id)initWithBundleIdentifier:(NSString *)bundleIdentifier;
 - (void)listWindows:(Arguments *)args;
 - (void)listTabs:(Arguments *)args;
 - (void)listTabsLinks:(Arguments *)args;

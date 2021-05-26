@@ -12,7 +12,12 @@
 
 int main(int argc, const char * argv[])
 {
-    App *app = [[App alloc] init];
+    NSString *bundleIdentifier = [[[NSProcessInfo processInfo] environment] objectForKey:@"CHROME_BUNDLE_IDENTIFIER"];
+    if (!bundleIdentifier) {
+        bundleIdentifier = @"com.google.Chrome";
+    }
+
+    App *app = [[App alloc] initWithBundleIdentifier:bundleIdentifier];
     Argonaut *argonaut = [[Argonaut alloc] init];
 
     [argonaut add:@"-h" target:argonaut action:@selector(printUsage:) description:@"Print help"];
