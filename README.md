@@ -3,22 +3,35 @@ chrome-cli
 
 
 ## Overview
-chrome-cli is a command line utility for controlling Google Chrome on OS X.
-It is a native binary that uses the Scripting Bridge to communicate
-with Chrome.
+chrome-cli is a command line utility for controlling Google Chrome compatible browsers on OS X.
+It is a native binary that uses the Scripting Bridge to communicate with Chrome.
+chrome-cli has been tested with the following browsers:
+* Chrome
+* Chrome Canary
+* Chromium
+* Brave
+* Vivaldi
+
+
+### Other browsers
+By default chrome-cli communicates with Chrome, but you can use it with other browsers by settings
+the `CHROME_BUNDLE_IDENTIFIER` environment variable. I.e. to use chrome-cli with Brave you can run the following command:
+```bash
+CHROME_BUNDLE_IDENTIFIER="com.brave.Browser" chrome-cli list tabs
+```
+Check the [scripts directory](scripts) for some convenient wrappers.
+
+
+#### How do I find the bundle identifier?
+The following command will print out the bundle identifier for Brave
+```bash
+mdls -name kMDItemCFBundleIdentifier -raw /Applications/Brave\ Browser.app
+```
 
 ## Installation
 
 #### Homebrew
     brew install chrome-cli
-
-#### Manual
-- Save the 'chrome-cli' binary to a location in your PATH (i.e. `/usr/local/bin/`)
-
-##### Downloads
-- [chrome-cli-darwin-1.6.0-x64](https://github.com/prasmussen/chrome-cli/releases/download/1.6.0/chrome-cli)
-- [canary-cli-darwin-1.5.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnTmZ2VmxRdmxRaFU)
-- [chromium-cli-darwin-1.5.0-x64](https://drive.google.com/uc?id=0B3X9GlR6EmbnXy1BTF9fQ0ZVN00)
 
 
 ## JavaScript execution
