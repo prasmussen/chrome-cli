@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export CHROME_BUNDLE_IDENTIFIER="org.chromium.Chromium"
+chrome-cli "$@"
