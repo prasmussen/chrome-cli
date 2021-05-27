@@ -31,7 +31,16 @@ mdls -name kMDItemCFBundleIdentifier -raw /Applications/Brave\ Browser.app
 ## Installation
 
 #### Homebrew
-    brew install chrome-cli
+```bash
+brew install chrome-cli
+```
+This will install:
+* chrome-cli
+* chrome-canary-cli
+* chromium-cli
+* brave-cli
+* vivaldi-cli
+
 
 
 ## JavaScript execution
