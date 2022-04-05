@@ -474,6 +474,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 - (void)printInfo:(chromeTab *)tab {
     if (tab) {
         printf("Id: %ld\n", (long)tab.id);
+        printf("Windows Id: %ld\n", (long) [self activeWindow].id);
         printf("Title: %s\n", tab.title.UTF8String);
         printf("Url: %s\n", tab.URL.UTF8String);
         printf("Loading: %s\n", tab.loading ? "Yes" : "No");
