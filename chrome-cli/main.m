@@ -17,19 +17,19 @@ int main(int argc, const char * argv[])
         bundleIdentifier = @"com.google.Chrome";
     }
 
-    OutputType outputType;
+    OutputFormat outputFormat;
 
-    NSString *outputTypeString = [[[NSProcessInfo processInfo] environment] objectForKey:@"OUTPUT_TYPE"];
-    if (!outputTypeString) {
-        outputType = kOutputTypeText;
-    } else if ([outputTypeString isEqualToString:@"json"]) {
-        outputType = kOutputTypeJSON;
+    NSString *outputFormatString = [[[NSProcessInfo processInfo] environment] objectForKey:@"OUTPUT_FORMAT"];
+    if (!outputFormatString) {
+        outputFormat = kOutputFormatText;
+    } else if ([outputFormatString isEqualToString:@"json"]) {
+        outputFormat = kOutputFormatJSON;
     } else {
-        outputType = kOutputTypeText;
+        outputFormat = kOutputFormatText;
     }
 
 
-    App *app = [[App alloc] initWithBundleIdentifier:bundleIdentifier outputType:outputType];
+    App *app = [[App alloc] initWithBundleIdentifier:bundleIdentifier outputFormat:outputFormat];
     Argonaut *argonaut = [[Argonaut alloc] init];
 
     [argonaut add:@"-h" target:argonaut action:@selector(printUsage:) description:@"Print help"];

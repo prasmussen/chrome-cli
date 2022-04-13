@@ -18,13 +18,13 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
 @implementation App {
     NSString *bundleIdentifier;
-    OutputType outputType;
+    OutputFormat outputFormat;
 }
 
-- (id)initWithBundleIdentifier:(NSString *)bundleIdentifier outputType:(OutputType)outputType {
+- (id)initWithBundleIdentifier:(NSString *)bundleIdentifier outputFormat:(OutputFormat)outputFormat {
     self = [super init];
     self->bundleIdentifier = bundleIdentifier;
-    self->outputType = outputType;
+    self->outputFormat = outputFormat;
     return self;
 }
 
@@ -36,7 +36,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         return chrome;
     }
 
-    if (self->outputType == kOutputTypeText) {
+    if (self->outputFormat == kOutputFormatText) {
         printf("Waiting for chrome to start...\n");
     }
     [chrome activate];
@@ -52,7 +52,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         }
     }
 
-    if (self->outputType == kOutputTypeText) {
+    if (self->outputFormat == kOutputFormatText) {
         printf("Chrome did not start for %ld seconds\n", kMaxLaunchTimeInSeconds);
     }
     exit(1);
@@ -60,7 +60,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
 
 - (void)listWindows:(Arguments *)args {
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSMutableArray *windowInfos = [[NSMutableArray alloc] init];
 
         for (chromeWindow *window in self.chrome.windows) {
@@ -84,7 +84,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)listTabs:(Arguments *)args {
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSMutableArray *tabInfos = [[NSMutableArray alloc] init];
 
         for (chromeWindow *window in self.chrome.windows) {
@@ -118,7 +118,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)listTabsLinks:(Arguments *)args {
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSMutableArray *tabInfos = [[NSMutableArray alloc] init];
 
         for (chromeWindow *window in self.chrome.windows) {
@@ -161,7 +161,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSMutableArray *tabInfos = [[NSMutableArray alloc] init];
 
         for (chromeTab *tab in window.tabs) {
@@ -194,7 +194,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         return;
     }
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSMutableArray *tabInfos = [[NSMutableArray alloc] init];
 
         for (chromeTab *tab in window.tabs) {
@@ -393,7 +393,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     chromeWindow *window = [self activeWindow];
     CGSize size = window.bounds.size;
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
             @"width" : @(size.width),
             @"height" : @(size.height),
@@ -409,7 +409,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     NSInteger windowId = [args asInteger:@"id"];
     chromeWindow *window = [self findWindow:windowId];
     CGSize size = window.bounds.size;
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
             @"width" : @(size.width),
             @"height" : @(size.height),
@@ -443,7 +443,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     chromeWindow *window = [self activeWindow];
     CGPoint origin = window.bounds.origin;
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
             @"x" : @(origin.x),
             @"y" : @(origin.y),
@@ -459,7 +459,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     chromeWindow *window = [self findWindow:windowId];
     CGPoint origin = window.bounds.origin;
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
             @"x" : @(origin.x),
             @"y" : @(origin.y),
@@ -499,7 +499,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
     id data = [tab executeJavascript:js];
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSString *jsOutput = [[NSString alloc] init];
         if (data) {
             jsOutput = (NSString *)data;
@@ -527,7 +527,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
     id data = [tab executeJavascript:js];
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSString *jsOutput = [[NSString alloc] init];
         if (data) {
             jsOutput = (NSString *)data;
@@ -552,7 +552,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
     id data = [tab executeJavascript:kJsPrintSource];
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSString *jsOutput = [[NSString alloc] init];
         if (data) {
             jsOutput = (NSString *)data;
@@ -579,7 +579,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
     id data = [tab executeJavascript:kJsPrintSource];
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSString *jsOutput = [[NSString alloc] init];
         if (data) {
             jsOutput = (NSString *)data;
@@ -597,7 +597,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)printChromeVersion:(Arguments *)args {
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
             @"version" : self.chrome.version,
         };
@@ -610,7 +610,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
 - (void)printVersion:(Arguments *)args {
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
             @"version" : kVersion,
         };
@@ -697,7 +697,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         return;
     }
 
-    if (self->outputType == kOutputTypeJSON) {
+    if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
             @"id" : @(tab.id),
             @"title" : tab.title,

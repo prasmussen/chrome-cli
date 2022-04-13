@@ -11,14 +11,14 @@
 
 
 typedef enum {
-    kOutputTypeText,
-    kOutputTypeJSON,
-} OutputType;
+    kOutputFormatText,
+    kOutputFormatJSON,
+} OutputFormat;
 
 
 @interface App : NSObject
 
-- (id)initWithBundleIdentifier:(NSString *)bundleIdentifier outputType:(OutputType)outputType;
+- (id)initWithBundleIdentifier:(NSString *)bundleIdentifier outputFormat:(OutputFormat)outputFormat;
 - (void)listWindows:(Arguments *)args;
 - (void)listTabs:(Arguments *)args;
 - (void)listTabsLinks:(Arguments *)args;
