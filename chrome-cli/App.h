@@ -9,9 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "Arguments.h"
 
+
+typedef enum {
+    kOutputTypeText,
+    kOutputTypeJSON,
+} OutputType;
+
+
 @interface App : NSObject
 
-- (id)initWithBundleIdentifier:(NSString *)bundleIdentifier;
+- (id)initWithBundleIdentifier:(NSString *)bundleIdentifier outputType:(OutputType)outputType;
 - (void)listWindows:(Arguments *)args;
 - (void)listTabs:(Arguments *)args;
 - (void)listTabsLinks:(Arguments *)args;
