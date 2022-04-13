@@ -22,7 +22,7 @@ int main(int argc, const char * argv[])
     NSString *outputFormatString = [[[NSProcessInfo processInfo] environment] objectForKey:@"OUTPUT_FORMAT"];
     if (!outputFormatString) {
         outputFormat = kOutputFormatText;
-    } else if ([outputFormatString isEqualToString:@"json"]) {
+    } else if ([outputFormatString caseInsensitiveCompare:@"json"] == NSOrderedSame) {
         outputFormat = kOutputFormatJSON;
     } else {
         outputFormat = kOutputFormatText;
