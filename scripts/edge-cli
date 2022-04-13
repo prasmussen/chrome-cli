@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export CHROME_BUNDLE_IDENTIFIER="com.microsoft.edgemac"
+chrome-cli "$@"
