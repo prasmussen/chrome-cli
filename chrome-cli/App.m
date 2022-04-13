@@ -700,6 +700,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
             @"id" : @(tab.id),
+            @"windowId" : @([self activeWindow].id),
             @"title" : tab.title,
             @"url" : tab.URL,
             @"loading" : @(tab.loading),
@@ -707,6 +708,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         [self printJSON:output];
     } else {
         printf("Id: %ld\n", (long)tab.id);
+        printf("Window id: %ld\n", (long)[self activeWindow].id);
         printf("Title: %s\n", tab.title.UTF8String);
         printf("Url: %s\n", tab.URL.UTF8String);
         printf("Loading: %s\n", tab.loading ? "Yes" : "No");
