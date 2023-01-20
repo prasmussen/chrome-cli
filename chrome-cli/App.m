@@ -174,9 +174,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         for (chromeWindow *window in self.chrome.windows) {
             for (chromeTab *tab in window.tabs) {
                 if (self.chrome.windows.count > 1) {
-                    printf("[%ld:%ld] %s:%s\n", (long)window.id, (long)tab.id, tab.title.UTF8String, tab.URL.UTF8String);
+                    printf("[%ld:%ld] title: %s, url: %s\n", (long)window.id, (long)tab.id, tab.title.UTF8String, tab.URL.UTF8String);
                 } else {
-                    printf("[%ld] %s:%s\n", (long)tab.id, tab.title.UTF8String, tab.URL.UTF8String);
+                    printf("[%ld] title: %s, url: %s\n", (long)tab.id, tab.title.UTF8String, tab.URL.UTF8String);
                 }
             }
         }
