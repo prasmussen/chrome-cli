@@ -24,6 +24,7 @@ typedef enum {
 - (void)listTabsLinks:(Arguments *)args;
 - (void)listTabsInWindow:(Arguments *)args;
 - (void)listTabsLinksInWindow:(Arguments *)args;
+- (void)listTabsWithLink:(Arguments *)args;
 - (void)printActiveTabInfo:(Arguments *)args;
 - (void)printTabInfo:(Arguments *)args;
 - (void)openUrlInNewTab:(Arguments *)args;
