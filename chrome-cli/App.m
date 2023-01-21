@@ -169,7 +169,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         NSDictionary *output = @{
             @"tabs": tabInfos,
         };
-        [self printJson:output];
+        [self printJSON:output];
     } else {
         for (chromeWindow *window in self.chrome.windows) {
             for (chromeTab *tab in window.tabs) {
