@@ -100,6 +100,26 @@ More details [here](https://www.chromium.org/developers/applescript). Thanks to 
     chrome-cli chrome version  (Print Chrome version)
     chrome-cli version  (Print application version)
 
+#### JSON output
+
+You can set the environment variable `OUTPUT_FORMAT` to json to get json output.
+For example:
+
+```
+$ OUTPUT_FORMAT=json chrome-cli list tabs
+{
+  "tabs" : [
+    {
+      "id" : 1869578516,
+      "title" : "Lobsters",
+      "url" : "https://lobste.rs/",
+      "windowId" : 1869578514,
+      "windowName" : "Lobsters"
+    }
+  ]
+}
+```
+
 ## Examples
 
 ###### List tabs
