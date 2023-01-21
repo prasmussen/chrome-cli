@@ -1,29 +1,33 @@
-chrome-cli
-==========
-
+# chrome-cli
 
 ## Overview
+
 chrome-cli is a command line utility for controlling Google Chrome compatible browsers on OS X.
 It is a native binary that uses the Scripting Bridge to communicate with Chrome.
 chrome-cli has been tested with the following browsers:
-* Chrome
-* Chrome Canary
-* Chromium
-* Brave
-* Vivaldi
 
+- Chrome
+- Chrome Canary
+- Chromium
+- Brave
+- Vivaldi
+- Edge
 
 ### Other browsers
+
 By default chrome-cli communicates with Chrome, but you can use it with other browsers by settings
 the `CHROME_BUNDLE_IDENTIFIER` environment variable. I.e. to use chrome-cli with Brave you can run the following command:
+
 ```bash
 CHROME_BUNDLE_IDENTIFIER="com.brave.Browser" chrome-cli list tabs
 ```
+
 Check the [scripts directory](scripts) for some convenient wrappers.
 
-
 #### How do I find the bundle identifier?
+
 The following command will print out the bundle identifier for Brave
+
 ```bash
 mdls -name kMDItemCFBundleIdentifier -raw /Applications/Brave\ Browser.app
 ```
@@ -31,24 +35,27 @@ mdls -name kMDItemCFBundleIdentifier -raw /Applications/Brave\ Browser.app
 ## Installation
 
 #### Homebrew
+
 ```bash
 brew install chrome-cli
 ```
+
 This will install:
-* chrome-cli
-* chrome-canary-cli
-* chromium-cli
-* brave-cli
-* vivaldi-cli
 
-
+- chrome-cli
+- chrome-canary-cli
+- chromium-cli
+- brave-cli
+- vivaldi-cli
+- edge-cli
 
 ## JavaScript execution
+
 To execute javascript you must first allow it under `View > Developer > Allow JavaScript from Apple Events`.
 More details [here](https://www.chromium.org/developers/applescript). Thanks to @kevinfrommelt and @paulp for providing this information.
 
-
 ## Usage
+
     chrome-cli -h  (Print help)
     chrome-cli --help  (Print help)
     chrome-cli help  (Print help)
@@ -93,9 +100,10 @@ More details [here](https://www.chromium.org/developers/applescript). Thanks to 
     chrome-cli chrome version  (Print Chrome version)
     chrome-cli version  (Print application version)
 
-
 ## Examples
+
 ###### List tabs
+
     $ chrome-cli list tabs
     [57] Inbox (1) - foo.bar@gmail.com - Gmail
     [2147] My Drive - Google Drive
@@ -104,6 +112,7 @@ More details [here](https://www.chromium.org/developers/applescript). Thanks to 
     [2155] Hacker News
 
 ###### Print tab info
+
     $ chrome-cli info -t 2161
     Id: 2162
     Title:
@@ -111,12 +120,14 @@ More details [here](https://www.chromium.org/developers/applescript). Thanks to 
     Loading: No
 
 ###### Print tab source
+
     $ chrome-cli source -t 2161
     <html><head></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">{
       "origin": "1.2.3.4"
     }</pre></body></html>
 
 ###### Extract information from page
+
     $ chrome-cli execute '(function() { var nodes = document.querySelectorAll(".title a"); var titles = []; for (var i = 0; i < 5; i++) { titles.push(nodes[i].innerHTML) } return titles.join("\n"); })();' -t 2155
     High-Speed Trading Isn't About Efficiency—It's About Cheating
     The terrifying surveillance case of Brandon Mayfield
