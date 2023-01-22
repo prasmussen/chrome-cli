@@ -11,7 +11,7 @@
 
 
 static NSInteger const kMaxLaunchTimeInSeconds = 15;
-static NSString * const kVersion = @"1.9.0";
+static NSString * const kVersion = @"1.9.1";
 static NSString * const kJsPrintSource = @"(function() { return document.getElementsByTagName('html')[0].outerHTML })();";
 
 
