@@ -117,7 +117,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 }
 
-- (void)listTabLinks:(Arguments *)args {
+- (void)listTabsLinks:(Arguments *)args {
     if (self->outputFormat == kOutputFormatJSON) {
         NSMutableArray *tabInfos = [[NSMutableArray alloc] init];
 
