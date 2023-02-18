@@ -49,9 +49,9 @@ This will install:
 - vivaldi-cli
 - edge-cli
 
-## JavaScript execution
+## JavaScript execution and viewing source
 
-To execute javascript you must first allow it under `View > Developer > Allow JavaScript from Apple Events`.
+To execute javascript or to view a tab's source you must first enable `View > Developer > Allow JavaScript from Apple Events`.
 More details [here](https://www.chromium.org/developers/applescript). Thanks to @kevinfrommelt and @paulp for providing this information.
 
 ## Usage
