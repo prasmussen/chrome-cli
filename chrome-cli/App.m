@@ -77,7 +77,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         [self printJSON:output];
     } else {
         for (chromeWindow *window in self.chrome.windows) {
-            printf("[%ld] %s\n", (long)window.id, window.name.UTF8String);
+            printf("[%s] %s\n", window.id.UTF8String, window.name.UTF8String);
         }
     }
 
@@ -108,9 +108,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         for (chromeWindow *window in self.chrome.windows) {
             for (chromeTab *tab in window.tabs) {
                 if (self.chrome.windows.count > 1) {
-                    printf("[%ld:%ld] %s\n", (long)window.id, (long)tab.id, tab.title.UTF8String);
+                    printf("[%s:%s] %s\n", window.id.UTF8String, tab.id.UTF8String, tab.title.UTF8String);
                 } else {
-                    printf("[%ld] %s\n", (long)tab.id, tab.title.UTF8String);
+                    printf("[%s] %s\n", tab.id.UTF8String, tab.title.UTF8String);
                 }
             }
         }
@@ -142,9 +142,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         for (chromeWindow *window in self.chrome.windows) {
             for (chromeTab *tab in window.tabs) {
                 if (self.chrome.windows.count > 1) {
-                    printf("[%ld:%ld] %s\n", (long)window.id, (long)tab.id, tab.URL.UTF8String);
+                    printf("[%s:%s] %s\n", window.id.UTF8String, tab.id.UTF8String, tab.URL.UTF8String);
                 } else {
-                    printf("[%ld] %s\n", (long)tab.id, tab.URL.UTF8String);
+                    printf("[%s] %s\n", tab.id.UTF8String, tab.URL.UTF8String);
                 }
             }
         }
@@ -174,9 +174,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         for (chromeWindow *window in self.chrome.windows) {
             for (chromeTab *tab in window.tabs) {
                 if (self.chrome.windows.count > 1) {
-                    printf("[%ld:%ld] title: %s, url: %s\n", (long)window.id, (long)tab.id, tab.title.UTF8String, tab.URL.UTF8String);
+                    printf("[%s:%s] title: %s, url: %s\n", window.id.UTF8String, tab.id.UTF8String, tab.title.UTF8String, tab.URL.UTF8String);
                 } else {
-                    printf("[%ld] title: %s, url: %s\n", (long)tab.id, tab.title.UTF8String, tab.URL.UTF8String);
+                    printf("[%s] title: %s, url: %s\n", tab.id.UTF8String, tab.title.UTF8String, tab.URL.UTF8String);
                 }
             }
         }
@@ -212,7 +212,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         [self printJSON:output];
     } else {
         for (chromeTab *tab in window.tabs) {
-            printf("[%ld] %s\n", (long)tab.id, tab.title.UTF8String);
+            printf("[%s] %s\n", tab.id.UTF8String, tab.title.UTF8String);
         }
     }
 }
@@ -245,7 +245,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         [self printJSON:output];
     } else {
         for (chromeTab *tab in window.tabs) {
-            printf("[%ld] %s\n", (long)tab.id, tab.URL.UTF8String);
+            printf("[%s] %s\n", tab.id.UTF8String, tab.URL.UTF8String);
         }
     }
 }
@@ -738,8 +738,8 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         };
         [self printJSON:output];
     } else {
-        printf("Id: %ld\n", (long)tab.id);
-        printf("Window id: %ld\n", (long)[self activeWindow].id);
+        printf("Id: %s\n", tab.id.UTF8String);
+        printf("Window id: %s\n", [self activeWindow].id.UTF8String);
         printf("Title: %s\n", tab.title.UTF8String);
         printf("Url: %s\n", tab.URL.UTF8String);
         printf("Loading: %s\n", tab.loading ? "Yes" : "No");
