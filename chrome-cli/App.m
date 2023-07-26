@@ -65,7 +65,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
         for (chromeWindow *window in self.chrome.windows) {
             NSDictionary *windowInfo = @{
-                @"id" : @(window.id),
+                @"id" : window.id,
                 @"name" : window.name,
             };
             [windowInfos addObject:windowInfo];
@@ -90,9 +90,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         for (chromeWindow *window in self.chrome.windows) {
             for (chromeTab *tab in window.tabs) {
                 NSDictionary *tabInfo = @{
-                    @"windowId" : @(window.id),
+                    @"windowId" : window.id,
                     @"windowName" : window.name,
-                    @"id" : @(tab.id),
+                    @"id" : tab.id,
                     @"title" : tab.title,
                     @"url" : tab.URL,
                 };
@@ -124,9 +124,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         for (chromeWindow *window in self.chrome.windows) {
             for (chromeTab *tab in window.tabs) {
                 NSDictionary *tabInfo = @{
-                    @"windowId" : @(window.id),
+                    @"windowId" : window.id,
                     @"windowName" : window.name,
-                    @"id" : @(tab.id),
+                    @"id" : tab.id,
                     @"title" : tab.title,
                     @"url" : tab.URL,
                 };
@@ -157,9 +157,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         for(chromeWindow *window in self.chrome.windows) {
             for (chromeTab *tab in window.tabs) {
                 NSDictionary *tabInfo = @{
-                    @"windowId": @(window.id),
+                    @"windowId": window.id,
                     @"windowName": window.name,
-                    @"id": @(tab.id),
+                    @"id": tab.id,
                     @"title": tab.title,
                     @"url": tab.URL,
                 };
@@ -197,9 +197,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
         for (chromeTab *tab in window.tabs) {
             NSDictionary *tabInfo = @{
-                @"windowId" : @(window.id),
+                @"windowId" : window.id,
                 @"windowName" : window.name,
-                @"id" : @(tab.id),
+                @"id" : tab.id,
                 @"title" : tab.title,
                 @"url" : tab.URL,
             };
@@ -230,9 +230,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
         for (chromeTab *tab in window.tabs) {
             NSDictionary *tabInfo = @{
-                @"windowId" : @(window.id),
+                @"windowId" : window.id,
                 @"windowName" : window.name,
-                @"id" : @(tab.id),
+                @"id" : tab.id,
                 @"title" : tab.title,
                 @"url" : tab.URL,
             };
@@ -730,8 +730,8 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
     if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
-            @"id" : @(tab.id),
-            @"windowId" : @([self activeWindow].id),
+            @"id" : tab.id,
+            @"windowId" : [self activeWindow].id,
             @"title" : tab.title,
             @"url" : tab.URL,
             @"loading" : @(tab.loading),
