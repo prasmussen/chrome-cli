@@ -12,6 +12,7 @@ chrome-cli has been tested with the following browsers:
 - Brave
 - Vivaldi
 - Edge
+- Arc
 
 ### Other browsers
 
@@ -48,6 +49,7 @@ This will install:
 - brave-cli
 - vivaldi-cli
 - edge-cli
+- arc-cli
 
 ## JavaScript execution and viewing source
 
