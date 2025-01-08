@@ -55,47 +55,6 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     
     return profiles;
 }
-- (NSString *)getProfileForWindowTitle:(NSString *)windowTitle fromProfiles:(NSArray *)profiles {
-    // Extract the email/profile name from window title (format: "Page Title - email@gmail.com - Google Chrome")
-    NSArray *parts = [windowTitle componentsSeparatedByString:@" - "];
-    if (parts.count >= 2) {
-        NSString *possibleEmail = parts[parts.count - 2];
-        
-        // For each profile directory
-        for (NSString *profile in profiles) {
-            NSString *prefsPath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Google/Chrome"]
-                                 stringByAppendingPathComponent:[profile stringByAppendingPathComponent:@"Preferences"]];
-            
-            if ([[NSFileManager defaultManager] fileExistsAtPath:prefsPath]) {
-                NSData *prefsData = [NSData dataWithContentsOfFile:prefsPath];
-                if (prefsData) {
-                    NSError *error = nil;
-                    NSDictionary *prefs = [NSJSONSerialization JSONObjectWithData:prefsData
-                                                                        options:0
-                                                                          error:&error];
-                    if (!error) {
-                        // Check account_info array for email matching
-                        NSArray *accountInfo = prefs[@"account_info"];
-                        if ([accountInfo isKindOfClass:[NSArray class]] && accountInfo.count > 0) {
-                            NSDictionary *firstAccount = accountInfo[0];
-                            NSString *email = firstAccount[@"email"];
-                            if ([email isEqualToString:possibleEmail]) {
-                                return profile;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    // If no match found and Default exists, use Default
-    if ([profiles containsObject:@"Default"]) {
-        return @"Default";
-    }
-    
-    return @"Unknown";
-}
 
 - (chromeApplication *)chrome {
     chromeApplication *chrome = [SBApplication applicationWithBundleIdentifier:self->bundleIdentifier];
