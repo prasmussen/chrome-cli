@@ -28,6 +28,33 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     return self;
 }
 
+- (NSArray *)getProfiles {
+    NSString *homeDir = NSHomeDirectory();
+    NSString *profilesPath = [homeDir stringByAppendingPathComponent:@"Library/Application Support/Google/Chrome"];
+    
+    NSError *error = nil;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:profilesPath error:&error];
+    if (error) {
+        return @[];
+    }
+    
+    NSMutableArray *profiles = [NSMutableArray array];
+    
+    for (NSString *item in contents) {
+        if ([item isEqualToString:@"Default"] || [item hasPrefix:@"Profile"]) {
+            NSString *prefsPath = [profilesPath stringByAppendingPathComponent:
+                                 [item stringByAppendingPathComponent:@"Preferences"]];
+            
+            if ([fileManager fileExistsAtPath:prefsPath]) {
+                [profiles addObject:item];
+            }
+        }
+    }
+    
+    return profiles;
+}
 
 - (chromeApplication *)chrome {
     chromeApplication *chrome = [SBApplication applicationWithBundleIdentifier:self->bundleIdentifier];
@@ -760,6 +787,18 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         return NSJSONWritingPrettyPrinted | NSJSONWritingSortedKeys;
     }
     return NSJSONWritingPrettyPrinted;
+}
+
+- (void)listProfiles:(Arguments *)args {
+    NSArray *profiles = [self getProfiles];
+    
+    if (self->outputFormat == kOutputFormatJSON) {
+        [self printJSON:@{@"profiles": profiles}];
+    } else {
+        for (NSString *profile in profiles) {
+            printf("Profile Directory: %s\n", profile.UTF8String);
+        }
+    }
 }
 
 @end
