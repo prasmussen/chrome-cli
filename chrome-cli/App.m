@@ -700,7 +700,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 - (chromeWindow *)findWindowWithTab:(chromeTab *)tab {
     for (chromeWindow *window in self.chrome.windows) {
         for (chromeTab *t in window.tabs) {
-            if (t.id == tab.id) {
+            if ([t.id isEqualToString:tab.id]) {
                 return window;
             }
         }
@@ -714,7 +714,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     int i = 1;
 
     for (chromeTab *t in window.tabs) {
-        if (t.id == tab.id) {
+        if ([t.id isEqualToString:tab.id]) {
             return i;
         }
         i++;
