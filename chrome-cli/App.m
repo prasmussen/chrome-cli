@@ -54,7 +54,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 
     if (self->outputFormat == kOutputFormatText) {
-        printf("Chrome did not start for %ld seconds\n", kMaxLaunchTimeInSeconds);
+    printf("Chrome did not start for %ld seconds\n", kMaxLaunchTimeInSeconds);
     }
     exit(1);
 }
@@ -412,9 +412,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)activateTab:(Arguments *)args {
-    // Support two forms:
+    // Support legacy and explicit forms:
     // 1) <tabId>
-    // 2) <windowId>:<tabId>
+    // 2) <windowId>:<tabId> (prefer window match, fallback to scanning)
     NSString *rawId = [args asString:@"id"];
     if (!rawId || rawId.length == 0) {
         return;
@@ -427,18 +427,26 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
         NSInteger windowId = [winStr integerValue];
         NSInteger tabId = [tabStr integerValue];
-
+        BOOL done = NO;
         chromeWindow *window = [self findWindow:windowId];
         if (!window) {
-            return;
+        } else {
+            chromeTab *tabInWindow = [self findTab:tabId inWindow:window];
+            if (tabInWindow) {
+                [self setTabActive:tabInWindow inWindow:window];
+                done = YES;
+            } else {
+            }
         }
 
-        chromeTab *tab = [self findTab:tabId inWindow:window];
-        if (!tab) {
-            return;
+        if (!done) {
+            chromeTab *tabAny = [self findTab:tabId];
+            chromeWindow *winAny = tabAny ? [self findWindowWithTab:tabAny] : nil;
+            if (tabAny && winAny) {
+                [self setTabActive:tabAny inWindow:winAny];
+            } else {
+            }
         }
-
-        [self setTabActive:tab inWindow:window];
         return;
     }
 
@@ -458,25 +466,19 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         return;
     }
 
-    chromeWindow *targetWindow = nil;
+    // Determine tabId and attempt to focus the window containing it with retries
+    NSInteger tabId = 0;
     NSRange sep = [rawId rangeOfString:@":"]; 
     if (sep.location != NSNotFound) {
-        NSString *winStr = [rawId substringToIndex:sep.location];
-        NSInteger windowId = [winStr integerValue];
-        targetWindow = [self findWindow:windowId];
+        NSString *tabStr = [rawId substringFromIndex:sep.location + 1];
+        tabId = [tabStr integerValue];
     } else {
-        NSInteger tabId = [rawId integerValue];
-        chromeTab *targetTab = [self findTab:tabId];
-        if (targetTab) {
-            targetWindow = [self findWindowWithTab:targetTab];
-        }
+        tabId = [rawId integerValue];
     }
 
-    if (!targetWindow) {
-        return;
+    BOOL focused = [self focusWindowContainingTabId:tabId maxAttempts:12 sleepMs:150];
+    if (!focused) {
     }
-
-    [self bringWindowToFrontBestEffort:targetWindow];
 }
 
 - (void)printActiveWindowSize:(Arguments *)args {
@@ -714,7 +716,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 #pragma mark Helper functions
 
 // Best-effort focusing: Scripting Bridge bring-to-front plus Accessibility raise to switch Spaces/fullscreen
-- (void)bringWindowToFrontBestEffort:(chromeWindow *)window {
+- (void)bringWindowToFrontBestEffort:(chromeWindow *)window targetTabTitle:(NSString *)tabTitleOrNil {
     if (!window) { return; }
 
     // First try via Scripting Bridge
@@ -756,14 +758,22 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 
     NSArray *axWindows = CFBridgingRelease(windowsValue);
-    NSString *targetTitle = window.name ?: @"";
-
+    NSString *targetTitle = tabTitleOrNil ?: (window.name ?: @"");
     for (id w in axWindows) {
         AXUIElementRef winRef = (__bridge AXUIElementRef)w;
         CFTypeRef titleValue = NULL;
         if (AXUIElementCopyAttributeValue(winRef, kAXTitleAttribute, &titleValue) == kAXErrorSuccess && titleValue) {
             NSString *title = CFBridgingRelease(titleValue);
-            if (title && [title isEqualToString:targetTitle]) {
+            BOOL matches = NO;
+            if (title && targetTitle.length > 0) {
+                if ([title isEqualToString:targetTitle]) {
+                    matches = YES;
+                } else {
+                    NSRange r = [title rangeOfString:targetTitle options:NSCaseInsensitiveSearch];
+                    matches = (r.location != NSNotFound);
+                }
+            }
+            if (matches) {
                 AXUIElementPerformAction(winRef, kAXRaiseAction);
                 break;
             }
@@ -851,6 +861,34 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 
     return NSNotFound;
+}
+
+// Try to bring to front the window containing tabId, with retries (helps when Chrome is fullscreen across Spaces)
+- (BOOL)focusWindowContainingTabId:(NSInteger)tabId maxAttempts:(int)attempts sleepMs:(int)ms {
+    for (int attempt = 1; attempt <= attempts; attempt++) {
+        NSArray *windowsSnapshot = [NSArray arrayWithArray:self.chrome.windows];
+        for (chromeWindow *w in windowsSnapshot) {
+            NSArray *tabsSnapshot = [NSArray arrayWithArray:w.tabs];
+            for (chromeTab *t in tabsSnapshot) {
+                if (t.id && [t.id integerValue] == tabId) {
+                    // Ensure the tab is the active one in that window
+                    [self setTabActive:t inWindow:w];
+                    // Bring to front using both SB and AX with the active tab title (more reliable match)
+                    [self bringWindowToFrontBestEffort:w targetTabTitle:(t.title ?: nil)];
+
+                    // Give macOS a moment and verify
+                    usleep((useconds_t)(ms * 1000));
+                    chromeWindow *aw = [self activeWindow];
+                    if (aw && [aw.id isEqualToString:w.id]) {
+                        return YES;
+                    } else {
+                    }
+                }
+            }
+        }
+        usleep((useconds_t)(ms * 1000));
+    }
+    return NO;
 }
 
 - (void)printInfo:(chromeTab *)tab {
