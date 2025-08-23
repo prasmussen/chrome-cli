@@ -54,7 +54,7 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 
     if (self->outputFormat == kOutputFormatText) {
-    printf("Chrome did not start for %ld seconds\n", kMaxLaunchTimeInSeconds);
+        printf("Chrome did not start for %ld seconds\n", kMaxLaunchTimeInSeconds);
     }
     exit(1);
 }
