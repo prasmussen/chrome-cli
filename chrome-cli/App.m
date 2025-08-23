@@ -8,6 +8,7 @@
 
 #import "App.h"
 #import "chrome.h"
+#import <ApplicationServices/ApplicationServices.h>
 
 
 static NSInteger const kMaxLaunchTimeInSeconds = 15;
@@ -421,7 +422,6 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
     NSRange sep = [rawId rangeOfString:@":"]; 
     if (sep.location != NSNotFound) {
-        // window-specific activation
         NSString *winStr = [rawId substringToIndex:sep.location];
         NSString *tabStr = [rawId substringFromIndex:sep.location + 1];
 
@@ -447,6 +447,36 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     chromeTab *tab = [self findTab:tabId];
     chromeWindow *window = [self findWindowWithTab:tab];
     [self setTabActive:tab inWindow:window];
+}
+
+// Same parsing as activateTab:, but ensures the window is brought to the foreground
+- (void)activateTabAndFocus:(Arguments *)args {
+    [self activateTab:args];
+
+    NSString *rawId = [args asString:@"id"];
+    if (!rawId || rawId.length == 0) {
+        return;
+    }
+
+    chromeWindow *targetWindow = nil;
+    NSRange sep = [rawId rangeOfString:@":"]; 
+    if (sep.location != NSNotFound) {
+        NSString *winStr = [rawId substringToIndex:sep.location];
+        NSInteger windowId = [winStr integerValue];
+        targetWindow = [self findWindow:windowId];
+    } else {
+        NSInteger tabId = [rawId integerValue];
+        chromeTab *targetTab = [self findTab:tabId];
+        if (targetTab) {
+            targetWindow = [self findWindowWithTab:targetTab];
+        }
+    }
+
+    if (!targetWindow) {
+        return;
+    }
+
+    [self bringWindowToFrontBestEffort:targetWindow];
 }
 
 - (void)printActiveWindowSize:(Arguments *)args {
@@ -682,6 +712,66 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
 
 #pragma mark Helper functions
+
+// Best-effort focusing: Scripting Bridge bring-to-front plus Accessibility raise to switch Spaces/fullscreen
+- (void)bringWindowToFrontBestEffort:(chromeWindow *)window {
+    if (!window) { return; }
+
+    // First try via Scripting Bridge
+    @try {
+        window.minimized = NO;
+        window.visible = YES;
+        window.index = 1;
+    } @catch (NSException *exception) {
+        // Ignore SB quirks
+    }
+    [self.chrome activate];
+
+    // Then try Accessibility-based raise to ensure macOS switches to the Space containing this window
+    // Request trust (this will show the system prompt once if not granted)
+    NSDictionary *promptOpts = @{(__bridge NSString *)kAXTrustedCheckOptionPrompt: @NO};
+    Boolean trusted = AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)promptOpts);
+    if (!trusted) {
+        AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{(__bridge NSString *)kAXTrustedCheckOptionPrompt: @YES});
+        return;
+    }
+
+    // Find the running app for our bundle id
+    pid_t pid = 0;
+    NSArray<NSRunningApplication *> *apps = [NSRunningApplication runningApplicationsWithBundleIdentifier:self->bundleIdentifier];
+    if (apps.count == 0) { return; }
+    // Prefer the frontmost or first
+    for (NSRunningApplication *app in apps) {
+        if (app.active) { pid = app.processIdentifier; break; }
+    }
+    if (pid == 0) { pid = apps.firstObject.processIdentifier; }
+
+    AXUIElementRef appRef = AXUIElementCreateApplication(pid);
+    if (!appRef) { return; }
+
+    CFTypeRef windowsValue = NULL;
+    if (AXUIElementCopyAttributeValue(appRef, kAXWindowsAttribute, &windowsValue) != kAXErrorSuccess || !windowsValue) {
+        CFRelease(appRef);
+        return;
+    }
+
+    NSArray *axWindows = CFBridgingRelease(windowsValue);
+    NSString *targetTitle = window.name ?: @"";
+
+    for (id w in axWindows) {
+        AXUIElementRef winRef = (__bridge AXUIElementRef)w;
+        CFTypeRef titleValue = NULL;
+        if (AXUIElementCopyAttributeValue(winRef, kAXTitleAttribute, &titleValue) == kAXErrorSuccess && titleValue) {
+            NSString *title = CFBridgingRelease(titleValue);
+            if (title && [title isEqualToString:targetTitle]) {
+                AXUIElementPerformAction(winRef, kAXRaiseAction);
+                break;
+            }
+        }
+    }
+
+    CFRelease(appRef);
+}
 
 - (chromeWindow *)activeWindow {
     // The first object seems to alway be the active window
