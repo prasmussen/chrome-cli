@@ -129,20 +129,20 @@ $ OUTPUT_FORMAT=json chrome-cli list tabs
 
 ###### List tabs
 
-  $ chrome-cli list tabs
-  [57] Inbox (1) - foo.bar@gmail.com - Gmail
-  [2147] My Drive - Google Drive
-  [2151] GitHub
-  [2161]
-  [2155] Hacker News
+    $ chrome-cli list tabs
+    [57] Inbox (1) - foo.bar@gmail.com - Gmail
+    [2147] My Drive - Google Drive
+    [2151] GitHub
+    [2161]
+    [2155] Hacker News
 
 If you have multiple Chrome windows (e.g., across profiles), tab listings include window ids like:
 
-  [1001:2161] Example Tab Title
+    [1001:2161] Example Tab Title
 
 You can then activate the tab specifically with:
 
-  chrome-cli activate -t 1001:2161
+    chrome-cli activate -t 1001:2161
 
 ###### Print tab info
 
