@@ -84,6 +84,7 @@ More details [here](https://www.chromium.org/developers/applescript). Thanks to 
     chrome-cli forward  (Navigate forward in active tab)
     chrome-cli forward -t <id>  (Navigate forward in specific tab)
     chrome-cli activate -t <id>  (Activate specific tab)
+    chrome-cli activate -t <windowId>:<id>  (Activate specific tab in a specific window — useful with multiple profiles)
     chrome-cli presentation  (Enter presentation mode with the active tab)
     chrome-cli presentation -t <id>  (Enter presentation mode with a specific tab)
     chrome-cli presentation exit  (Exit presentation mode)
@@ -126,12 +127,20 @@ $ OUTPUT_FORMAT=json chrome-cli list tabs
 
 ###### List tabs
 
-    $ chrome-cli list tabs
-    [57] Inbox (1) - foo.bar@gmail.com - Gmail
-    [2147] My Drive - Google Drive
-    [2151] GitHub
-    [2161]
-    [2155] Hacker News
+  $ chrome-cli list tabs
+  [57] Inbox (1) - foo.bar@gmail.com - Gmail
+  [2147] My Drive - Google Drive
+  [2151] GitHub
+  [2161]
+  [2155] Hacker News
+
+If you have multiple Chrome windows (e.g., across profiles), tab listings include window ids like:
+
+  [1001:2161] Example Tab Title
+
+You can then activate the tab specifically with:
+
+  chrome-cli activate -t 1001:2161
 
 ###### Print tab info
 

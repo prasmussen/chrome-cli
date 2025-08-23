@@ -411,12 +411,41 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)activateTab:(Arguments *)args {
-    NSInteger tabId = [args asInteger:@"id"];
+    // Support two forms:
+    // 1) <tabId>
+    // 2) <windowId>:<tabId>
+    NSString *rawId = [args asString:@"id"];
+    if (!rawId || rawId.length == 0) {
+        return;
+    }
 
-    // Find tab and the window that the tab resides in
+    NSRange sep = [rawId rangeOfString:@":"]; 
+    if (sep.location != NSNotFound) {
+        // window-specific activation
+        NSString *winStr = [rawId substringToIndex:sep.location];
+        NSString *tabStr = [rawId substringFromIndex:sep.location + 1];
+
+        NSInteger windowId = [winStr integerValue];
+        NSInteger tabId = [tabStr integerValue];
+
+        chromeWindow *window = [self findWindow:windowId];
+        if (!window) {
+            return;
+        }
+
+        chromeTab *tab = [self findTab:tabId inWindow:window];
+        if (!tab) {
+            return;
+        }
+
+        [self setTabActive:tab inWindow:window];
+        return;
+    }
+
+    // Fallback to legacy behavior: search all windows for tabId
+    NSInteger tabId = [rawId integerValue];
     chromeTab *tab = [self findTab:tabId];
     chromeWindow *window = [self findWindowWithTab:tab];
-
     [self setTabActive:tab inWindow:window];
 }
 
@@ -706,6 +735,17 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
         }
     }
 
+    return nil;
+}
+
+- (chromeTab *)findTab:(NSInteger)tabId inWindow:(chromeWindow *)window {
+    if (!window) {
+        return nil;
+    }
+    chromeTab *tab = [window.tabs objectWithID:@(tabId)];
+    if (tab && tab.id) {
+        return tab;
+    }
     return nil;
 }
 
