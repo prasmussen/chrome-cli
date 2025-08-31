@@ -11,24 +11,10 @@
 		2E9DCEB018A6E20A00A5339D /* Arguments.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9DCEAF18A6E20A00A5339D /* Arguments.m */; };
 		2EB4622718A668F700211D5F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EB4622618A668F700211D5F /* Foundation.framework */; };
 		2EB4622A18A668F700211D5F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB4622918A668F700211D5F /* main.m */; };
-		2EB4622E18A668F700211D5F /* chrome_cli.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB4622D18A668F700211D5F /* chrome_cli.1 */; };
 		2EB4623518A6690800211D5F /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EB4623418A6690800211D5F /* ScriptingBridge.framework */; };
 		2EBFE41818A6822B008EC2DF /* Argonaut.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBFE41718A6822B008EC2DF /* Argonaut.m */; };
 		2EBFE41B18A68613008EC2DF /* App.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBFE41A18A68613008EC2DF /* App.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		2EB4622118A668F700211D5F /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				2EB4622E18A668F700211D5F /* chrome_cli.1 in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2E9DCEAB18A69A0800A5339D /* Handler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Handler.h; sourceTree = "<group>"; };
@@ -39,7 +25,6 @@
 		2EB4622618A668F700211D5F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		2EB4622918A668F700211D5F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2EB4622C18A668F700211D5F /* chrome-cli-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "chrome-cli-Prefix.pch"; sourceTree = "<group>"; };
-		2EB4622D18A668F700211D5F /* chrome_cli.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = chrome_cli.1; sourceTree = "<group>"; };
 		2EB4623418A6690800211D5F /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		2EB4623618A6691700211D5F /* chrome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = chrome.h; sourceTree = "<group>"; };
 		2EBFE41618A6822B008EC2DF /* Argonaut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Argonaut.h; sourceTree = "<group>"; };
@@ -108,7 +93,6 @@
 				2EBFE41A18A68613008EC2DF /* App.m */,
 				2E9DCEB118A6E65200A5339D /* Argonaut */,
 				2EB4623618A6691700211D5F /* chrome.h */,
-				2EB4622D18A668F700211D5F /* chrome_cli.1 */,
 				2EB4622B18A668F700211D5F /* Supporting Files */,
 			);
 			path = "chrome-cli";
@@ -131,7 +115,6 @@
 			buildPhases = (
 				2EB4621F18A668F700211D5F /* Sources */,
 				2EB4622018A668F700211D5F /* Frameworks */,
-				2EB4622118A668F700211D5F /* CopyFiles */,
 			);
 			buildRules = (
 			);
