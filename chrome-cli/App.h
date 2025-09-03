@@ -58,5 +58,5 @@ typedef enum {
 - (void)printSourceFromTab:(Arguments *)args;
 - (void)printChromeVersion:(Arguments *)args;
 - (void)printVersion:(Arguments *)args;
-
+- (void)listProfiles:(Arguments *)args;
 @end
