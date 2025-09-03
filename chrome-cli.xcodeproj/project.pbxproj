@@ -15,6 +15,8 @@
 		2EB4623518A6690800211D5F /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EB4623418A6690800211D5F /* ScriptingBridge.framework */; };
 		2EBFE41818A6822B008EC2DF /* Argonaut.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBFE41718A6822B008EC2DF /* Argonaut.m */; };
 		2EBFE41B18A68613008EC2DF /* App.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBFE41A18A68613008EC2DF /* App.m */; };
+		A10000032025082300000001 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000022025082300000001 /* AppKit.framework */; };
+		A10000012025082300000001 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000002025082300000001 /* ApplicationServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -46,6 +48,8 @@
 		2EBFE41718A6822B008EC2DF /* Argonaut.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Argonaut.m; sourceTree = "<group>"; };
 		2EBFE41918A68613008EC2DF /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
 		2EBFE41A18A68613008EC2DF /* App.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = App.m; sourceTree = "<group>"; };
+		A10000002025082300000001 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		A10000022025082300000001 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000032025082300000001 /* AppKit.framework in Frameworks */,
+				A10000012025082300000001 /* ApplicationServices.framework in Frameworks */,
 				2EB4623518A6690800211D5F /* ScriptingBridge.framework in Frameworks */,
 				2EB4622718A668F700211D5F /* Foundation.framework in Frameworks */,
 			);
@@ -94,11 +100,13 @@
 		2EB4622518A668F700211D5F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A10000022025082300000001 /* AppKit.framework */,
+				A10000002025082300000001 /* ApplicationServices.framework */,
 				2EB4623418A6690800211D5F /* ScriptingBridge.framework */,
 				2EB4622618A668F700211D5F /* Foundation.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
+			sourceTree = SDKROOT;
 		};
 		2EB4622818A668F700211D5F /* chrome-cli */ = {
 			isa = PBXGroup;

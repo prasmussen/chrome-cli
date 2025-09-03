@@ -68,6 +68,7 @@ int main(int argc, const char * argv[])
     [argonaut add:@"forward -t <id>" target:app action:@selector(goForwardInTab:) description:@"Navigate forward in specific tab"];
 
     [argonaut add:@"activate -t <id>" target:app action:@selector(activateTab:) description:@"Activate specific tab"];
+    [argonaut add:@"activate -t <id> --focus" target:app action:@selector(activateTabAndFocus:) description:@"Activate tab and bring its window to front"];
 
     [argonaut add:@"size" target:app action:@selector(printActiveWindowSize:) description:@"Print size of active window"];
     [argonaut add:@"size -w <id>" target:app action:@selector(printWindowSize:) description:@"Print size of specific window"];

@@ -8,10 +8,11 @@
 
 #import "App.h"
 #import "chrome.h"
+#import <ApplicationServices/ApplicationServices.h>
 
 
 static NSInteger const kMaxLaunchTimeInSeconds = 15;
-static NSString * const kVersion = @"1.10.3";
+static NSString * const kVersion = @"1.11.0";
 static NSString * const kJsPrintSource = @"(function() { return document.getElementsByTagName('html')[0].outerHTML })();";
 
 
@@ -411,9 +412,9 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)activateTab:(Arguments *)args {
-    // Support two forms:
+    // Support legacy and explicit forms:
     // 1) <tabId>
-    // 2) <windowId>:<tabId>
+    // 2) <windowId>:<tabId> (prefer window match, fallback to scanning)
     NSString *rawId = [args asString:@"id"];
     if (!rawId || rawId.length == 0) {
         return;
@@ -421,24 +422,31 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
     NSRange sep = [rawId rangeOfString:@":"]; 
     if (sep.location != NSNotFound) {
-        // window-specific activation
         NSString *winStr = [rawId substringToIndex:sep.location];
         NSString *tabStr = [rawId substringFromIndex:sep.location + 1];
 
         NSInteger windowId = [winStr integerValue];
         NSInteger tabId = [tabStr integerValue];
-
+        BOOL done = NO;
         chromeWindow *window = [self findWindow:windowId];
         if (!window) {
-            return;
+        } else {
+            chromeTab *tabInWindow = [self findTab:tabId inWindow:window];
+            if (tabInWindow) {
+                [self setTabActive:tabInWindow inWindow:window];
+                done = YES;
+            } else {
+            }
         }
 
-        chromeTab *tab = [self findTab:tabId inWindow:window];
-        if (!tab) {
-            return;
+        if (!done) {
+            chromeTab *tabAny = [self findTab:tabId];
+            chromeWindow *winAny = tabAny ? [self findWindowWithTab:tabAny] : nil;
+            if (tabAny && winAny) {
+                [self setTabActive:tabAny inWindow:winAny];
+            } else {
+            }
         }
-
-        [self setTabActive:tab inWindow:window];
         return;
     }
 
@@ -447,6 +455,30 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     chromeTab *tab = [self findTab:tabId];
     chromeWindow *window = [self findWindowWithTab:tab];
     [self setTabActive:tab inWindow:window];
+}
+
+// Same parsing as activateTab:, but ensures the window is brought to the foreground
+- (void)activateTabAndFocus:(Arguments *)args {
+    [self activateTab:args];
+
+    NSString *rawId = [args asString:@"id"];
+    if (!rawId || rawId.length == 0) {
+        return;
+    }
+
+    // Determine tabId and attempt to focus the window containing it with retries
+    NSInteger tabId = 0;
+    NSRange sep = [rawId rangeOfString:@":"]; 
+    if (sep.location != NSNotFound) {
+        NSString *tabStr = [rawId substringFromIndex:sep.location + 1];
+        tabId = [tabStr integerValue];
+    } else {
+        tabId = [rawId integerValue];
+    }
+
+    BOOL focused = [self focusWindowContainingTabId:tabId maxAttempts:12 sleepMs:150];
+    if (!focused) {
+    }
 }
 
 - (void)printActiveWindowSize:(Arguments *)args {
@@ -683,6 +715,74 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 
 #pragma mark Helper functions
 
+// Best-effort focusing: Scripting Bridge bring-to-front plus Accessibility raise to switch Spaces/fullscreen
+- (void)bringWindowToFrontBestEffort:(chromeWindow *)window targetTabTitle:(NSString *)tabTitleOrNil {
+    if (!window) { return; }
+
+    // First try via Scripting Bridge
+    @try {
+        window.minimized = NO;
+        window.visible = YES;
+        window.index = 1;
+    } @catch (NSException *exception) {
+        // Ignore SB quirks
+    }
+    [self.chrome activate];
+
+    // Then try Accessibility-based raise to ensure macOS switches to the Space containing this window
+    // Request trust (this will show the system prompt once if not granted)
+    NSDictionary *promptOpts = @{(__bridge NSString *)kAXTrustedCheckOptionPrompt: @NO};
+    Boolean trusted = AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)promptOpts);
+    if (!trusted) {
+        AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)@{(__bridge NSString *)kAXTrustedCheckOptionPrompt: @YES});
+        return;
+    }
+
+    // Find the running app for our bundle id
+    pid_t pid = 0;
+    NSArray<NSRunningApplication *> *apps = [NSRunningApplication runningApplicationsWithBundleIdentifier:self->bundleIdentifier];
+    if (apps.count == 0) { return; }
+    // Prefer the frontmost or first
+    for (NSRunningApplication *app in apps) {
+        if (app.active) { pid = app.processIdentifier; break; }
+    }
+    if (pid == 0) { pid = apps.firstObject.processIdentifier; }
+
+    AXUIElementRef appRef = AXUIElementCreateApplication(pid);
+    if (!appRef) { return; }
+
+    CFTypeRef windowsValue = NULL;
+    if (AXUIElementCopyAttributeValue(appRef, kAXWindowsAttribute, &windowsValue) != kAXErrorSuccess || !windowsValue) {
+        CFRelease(appRef);
+        return;
+    }
+
+    NSArray *axWindows = CFBridgingRelease(windowsValue);
+    NSString *targetTitle = tabTitleOrNil ?: (window.name ?: @"");
+    for (id w in axWindows) {
+        AXUIElementRef winRef = (__bridge AXUIElementRef)w;
+        CFTypeRef titleValue = NULL;
+        if (AXUIElementCopyAttributeValue(winRef, kAXTitleAttribute, &titleValue) == kAXErrorSuccess && titleValue) {
+            NSString *title = CFBridgingRelease(titleValue);
+            BOOL matches = NO;
+            if (title && targetTitle.length > 0) {
+                if ([title isEqualToString:targetTitle]) {
+                    matches = YES;
+                } else {
+                    NSRange r = [title rangeOfString:targetTitle options:NSCaseInsensitiveSearch];
+                    matches = (r.location != NSNotFound);
+                }
+            }
+            if (matches) {
+                AXUIElementPerformAction(winRef, kAXRaiseAction);
+                break;
+            }
+        }
+    }
+
+    CFRelease(appRef);
+}
+
 - (chromeWindow *)activeWindow {
     // The first object seems to alway be the active window
     chromeWindow *window = self.chrome.windows.firstObject;
@@ -761,6 +861,34 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 
     return NSNotFound;
+}
+
+// Try to bring to front the window containing tabId, with retries (helps when Chrome is fullscreen across Spaces)
+- (BOOL)focusWindowContainingTabId:(NSInteger)tabId maxAttempts:(int)attempts sleepMs:(int)ms {
+    for (int attempt = 1; attempt <= attempts; attempt++) {
+        NSArray *windowsSnapshot = [NSArray arrayWithArray:self.chrome.windows];
+        for (chromeWindow *w in windowsSnapshot) {
+            NSArray *tabsSnapshot = [NSArray arrayWithArray:w.tabs];
+            for (chromeTab *t in tabsSnapshot) {
+                if (t.id && [t.id integerValue] == tabId) {
+                    // Ensure the tab is the active one in that window
+                    [self setTabActive:t inWindow:w];
+                    // Bring to front using both SB and AX with the active tab title (more reliable match)
+                    [self bringWindowToFrontBestEffort:w targetTabTitle:(t.title ?: nil)];
+
+                    // Give macOS a moment and verify
+                    usleep((useconds_t)(ms * 1000));
+                    chromeWindow *aw = [self activeWindow];
+                    if (aw && [aw.id isEqualToString:w.id]) {
+                        return YES;
+                    } else {
+                    }
+                }
+            }
+        }
+        usleep((useconds_t)(ms * 1000));
+    }
+    return NO;
 }
 
 - (void)printInfo:(chromeTab *)tab {

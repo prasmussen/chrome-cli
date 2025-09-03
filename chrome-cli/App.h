@@ -43,6 +43,7 @@ typedef enum {
 - (void)goForwardActiveTab:(Arguments *)args;
 - (void)goForwardInTab:(Arguments *)args;
 - (void)activateTab:(Arguments *)args;
+- (void)activateTabAndFocus:(Arguments *)args;
 - (void)printActiveWindowSize:(Arguments *)args;
 - (void)printWindowSize:(Arguments *)args;
 - (void)setActiveWindowSize:(Arguments *)args;
