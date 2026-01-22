@@ -7,6 +7,7 @@ It is a native binary that uses the Scripting Bridge to communicate with Chrome.
 chrome-cli has been tested with the following browsers:
 
 - Chrome
+- Chrome Beta
 - Chrome Canary
 - Chromium
 - Brave
@@ -44,6 +45,7 @@ brew install chrome-cli
 This will install:
 
 - chrome-cli
+- chrome-beta-cli
 - chrome-canary-cli
 - chromium-cli
 - brave-cli
@@ -63,20 +65,20 @@ More details [here](https://www.chromium.org/developers/applescript). Thanks to 
     chrome-cli help  (Print help)
     chrome-cli list windows  (List all windows)
     chrome-cli list tabs  (List all tabs)
-    chrome-cli list tabs -w <id>  (List tabs in specific window)
+    chrome-cli list tabs -w <id|name>  (List tabs in specific window)
     chrome-cli list links  (List all tabs' link)
-    chrome-cli list links -w <id>  (List tabs' link in specific window)
+    chrome-cli list links -w <id|name>  (List tabs' link in specific window)
     chrome-cli info  (Print info for active tab)
     chrome-cli info -t <id>  (Print info for specific tab)
     chrome-cli open <url>  (Open url in new tab)
     chrome-cli open <url> -n  (Open url in new window)
     chrome-cli open <url> -i  (Open url in new incognito window)
     chrome-cli open <url> -t <id>  (Open url in specific tab)
-    chrome-cli open <url> -w <id>  (Open url in new tab in specific window)
+    chrome-cli open <url> -w <id|name>  (Open url in new tab in specific window)
     chrome-cli close  (Close active tab)
     chrome-cli close -w  (Close active window)
     chrome-cli close -t <id>  (Close specific tab)
-    chrome-cli close -w <id>  (Close specific window)
+    chrome-cli close -w <id|name>  (Close specific window)
     chrome-cli reload  (Reload active tab)
     chrome-cli reload -t <id>  (Reload specific tab)
     chrome-cli back  (Navigate back in active tab)
@@ -91,13 +93,13 @@ More details [here](https://www.chromium.org/developers/applescript). Thanks to 
     chrome-cli presentation -t <id>  (Enter presentation mode with a specific tab)
     chrome-cli presentation exit  (Exit presentation mode)
     chrome-cli size  (Print size of active window)
-    chrome-cli size -w <id>  (Print size of specific window)
+    chrome-cli size -w <id|name>  (Print size of specific window)
     chrome-cli size <width> <height>  (Set size of active window)
-    chrome-cli size <width> <height> -w <id>  (Set size of specific window)
+    chrome-cli size <width> <height> -w <id|name>  (Set size of specific window)
     chrome-cli position  (Print position of active window)
-    chrome-cli position -w <id>  (Print position of specific window)
+    chrome-cli position -w <id|name>  (Print position of specific window)
     chrome-cli position <x> <y>  (Set position of active window)
-    chrome-cli position <x> <y> -w <id>  (Set position of specific window)
+    chrome-cli position <x> <y> -w <id|name>  (Set position of specific window)
     chrome-cli source  (Print source from active tab)
     chrome-cli source -t <id>  (Print source from specific tab)
     chrome-cli execute <javascript>  (Execute javascript in active tab)
@@ -123,6 +125,20 @@ $ OUTPUT_FORMAT=json chrome-cli list tabs
     }
   ]
 }
+```
+
+#### Window selection by name
+
+The `-w` flag accepts either a window ID or a window name. When a non-numeric value is provided, it matches windows whose title starts with the given string (case-insensitive). If multiple windows match, the one with the lowest window ID is selected.
+
+```bash
+# By window ID
+chrome-cli list tabs -w 1869578514
+
+# By window name (case-insensitive prefix match)
+chrome-cli list tabs -w Gmail
+chrome-cli list tabs -w "Hacker News"
+chrome-cli close -w GitHub
 ```
 
 ## Examples

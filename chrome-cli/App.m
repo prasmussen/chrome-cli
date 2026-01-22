@@ -185,8 +185,8 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)listTabsInWindow:(Arguments *)args {
-    NSInteger windowId = [args asInteger:@"id"];
-    chromeWindow *window = [self findWindow:windowId];
+    NSString *windowArg = [args asString:@"id|name"];
+    chromeWindow *window = [self findWindowByIdOrName:windowArg];
 
     if (!window) {
         return;
@@ -219,8 +219,8 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)listTabsLinksInWindow:(Arguments *)args {
-    NSInteger windowId = [args asInteger:@"id"];
-    chromeWindow *window = [self findWindow:windowId];
+    NSString *windowArg = [args asString:@"id|name"];
+    chromeWindow *window = [self findWindowByIdOrName:windowArg];
 
     if (!window) {
         return;
@@ -309,11 +309,11 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)openUrlInWindow:(Arguments *)args {
-    NSInteger windowId = [args asInteger:@"id"];
+    NSString *windowArg = [args asString:@"id|name"];
     NSString *url = [args asString:@"url"];
 
     chromeTab *tab = [[[self.chrome classForScriptingClass:@"tab"] alloc] init];
-    chromeWindow *window = [self findWindow:windowId];
+    chromeWindow *window = [self findWindowByIdOrName:windowArg];
 
     if (!window) {
         return;
@@ -368,8 +368,8 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)closeWindow:(Arguments *)args {
-    NSInteger windowId = [args asInteger:@"id"];
-    chromeWindow *window = [self findWindow:windowId];
+    NSString *windowArg = [args asString:@"id|name"];
+    chromeWindow *window = [self findWindowByIdOrName:windowArg];
 
     if (window) {
         [window close];
@@ -498,8 +498,8 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)printWindowSize:(Arguments *)args {
-    NSInteger windowId = [args asInteger:@"id"];
-    chromeWindow *window = [self findWindow:windowId];
+    NSString *windowArg = [args asString:@"id|name"];
+    chromeWindow *window = [self findWindowByIdOrName:windowArg];
     CGSize size = window.bounds.size;
     if (self->outputFormat == kOutputFormatJSON) {
         NSDictionary *output = @{
@@ -522,11 +522,11 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)setWindowSize:(Arguments *)args {
-    NSInteger windowId = [args asInteger:@"id"];
+    NSString *windowArg = [args asString:@"id|name"];
     float width = [args asFloat:@"width"];
     float height = [args asFloat:@"height"];
 
-    chromeWindow *window = [self findWindow:windowId];
+    chromeWindow *window = [self findWindowByIdOrName:windowArg];
     CGPoint origin = window.bounds.origin;
     window.bounds = NSMakeRect(origin.x, origin.y, width, height);
 }
@@ -547,8 +547,8 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)printWindowPosition:(Arguments *)args {
-    NSInteger windowId = [args asInteger:@"id"];
-    chromeWindow *window = [self findWindow:windowId];
+    NSString *windowArg = [args asString:@"id|name"];
+    chromeWindow *window = [self findWindowByIdOrName:windowArg];
     CGPoint origin = window.bounds.origin;
 
     if (self->outputFormat == kOutputFormatJSON) {
@@ -572,11 +572,11 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
 }
 
 - (void)setWindowPosition:(Arguments *)args {
-    NSInteger windowId = [args asInteger:@"id"];
+    NSString *windowArg = [args asString:@"id|name"];
     float x = [args asFloat:@"x"];
     float y = [args asFloat:@"y"];
 
-    chromeWindow *window = [self findWindow:windowId];
+    chromeWindow *window = [self findWindowByIdOrName:windowArg];
     CGSize size = window.bounds.size;
     window.bounds = NSMakeRect(x, y, size.width, size.height);
 }
@@ -804,6 +804,48 @@ static NSString * const kJsPrintSource = @"(function() { return document.getElem
     }
 
     return nil;
+}
+
+- (chromeWindow *)findWindowByName:(NSString *)name {
+    chromeWindow *bestMatch = nil;
+    NSInteger bestMatchId = NSIntegerMax;
+    NSString *lowerName = [name lowercaseString];
+
+    for (chromeWindow *window in self.chrome.windows) {
+        NSString *windowName = [window.name lowercaseString];
+
+        // Check if window name starts with search string
+        if ([windowName hasPrefix:lowerName]) {
+            NSInteger windowId = [window.id integerValue];
+
+            // Prefer lower window ID for ties (all matches have same prefix length)
+            if (bestMatch == nil || windowId < bestMatchId) {
+                bestMatch = window;
+                bestMatchId = windowId;
+            }
+        }
+    }
+
+    return bestMatch;
+}
+
+- (chromeWindow *)findWindowByIdOrName:(NSString *)identifier {
+    // Check if identifier is purely numeric
+    NSCharacterSet *nonDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    BOOL isNumeric = ([identifier rangeOfCharacterFromSet:nonDigits].location == NSNotFound
+                      && identifier.length > 0);
+
+    if (isNumeric) {
+        // Try by ID first
+        chromeWindow *window = [self findWindow:[identifier integerValue]];
+        if (window) {
+            return window;
+        }
+        // Fall back to name search (for windows with all-numeric titles like "2024")
+        return [self findWindowByName:identifier];
+    } else {
+        return [self findWindowByName:identifier];
+    }
 }
 
 - (chromeTab *)activeTab {

@@ -38,9 +38,9 @@ int main(int argc, const char * argv[])
 
     [argonaut add:@"list windows" target:app action:@selector(listWindows:) description:@"List all windows"];
     [argonaut add:@"list tabs" target:app action:@selector(listTabs:) description:@"List all tabs"];
-    [argonaut add:@"list tabs -w <id>" target:app action:@selector(listTabsInWindow:) description:@"List tabs in specific window"];
+    [argonaut add:@"list tabs -w <id|name>" target:app action:@selector(listTabsInWindow:) description:@"List tabs in specific window"];
     [argonaut add:@"list links" target:app action:@selector(listTabsLinks:) description:@"List all tabs' link"];
-    [argonaut add:@"list links -w <id>" target:app action:@selector(listTabsLinksInWindow:) description:@"List tabs' link in specific window"];
+    [argonaut add:@"list links -w <id|name>" target:app action:@selector(listTabsLinksInWindow:) description:@"List tabs' link in specific window"];
     [argonaut add:@"list tablinks" target:app action:@selector(listTabsWithLink:) description:@"List tabs' with the link"];
 
 
@@ -51,12 +51,12 @@ int main(int argc, const char * argv[])
     [argonaut add:@"open <url> -n" target:app action:@selector(openUrlInNewWindow:) description:@"Open url in new window"];
     [argonaut add:@"open <url> -i" target:app action:@selector(openUrlInNewIncognitoWindow:) description:@"Open url in new incognito window"];
     [argonaut add:@"open <url> -t <id>" target:app action:@selector(openUrlInTab:) description:@"Open url in specific tab"];
-    [argonaut add:@"open <url> -w <id>" target:app action:@selector(openUrlInWindow:) description:@"Open url in new tab in specific window"];
+    [argonaut add:@"open <url> -w <id|name>" target:app action:@selector(openUrlInWindow:) description:@"Open url in new tab in specific window"];
 
     [argonaut add:@"close" target:app action:@selector(closeActiveTab:) description:@"Close active tab"];
     [argonaut add:@"close -w" target:app action:@selector(closeActiveWindow:) description:@"Close active window"];
     [argonaut add:@"close -t <id>" target:app action:@selector(closeTab:) description:@"Close specific tab"];
-    [argonaut add:@"close -w <id>" target:app action:@selector(closeWindow:) description:@"Close specific window"];
+    [argonaut add:@"close -w <id|name>" target:app action:@selector(closeWindow:) description:@"Close specific window"];
 
     [argonaut add:@"reload" target:app action:@selector(reloadActiveTab:) description:@"Reload active tab"];
     [argonaut add:@"reload -t <id>" target:app action:@selector(reloadTab:) description:@"Reload specific tab"];
@@ -71,14 +71,14 @@ int main(int argc, const char * argv[])
     [argonaut add:@"activate -t <id> --focus" target:app action:@selector(activateTabAndFocus:) description:@"Activate tab and bring its window to front"];
 
     [argonaut add:@"size" target:app action:@selector(printActiveWindowSize:) description:@"Print size of active window"];
-    [argonaut add:@"size -w <id>" target:app action:@selector(printWindowSize:) description:@"Print size of specific window"];
+    [argonaut add:@"size -w <id|name>" target:app action:@selector(printWindowSize:) description:@"Print size of specific window"];
     [argonaut add:@"size <width> <height>" target:app action:@selector(setActiveWindowSize:) description:@"Set size of active window"];
-    [argonaut add:@"size <width> <height> -w <id>" target:app action:@selector(setWindowSize:) description:@"Set size of specific window"];
+    [argonaut add:@"size <width> <height> -w <id|name>" target:app action:@selector(setWindowSize:) description:@"Set size of specific window"];
 
     [argonaut add:@"position" target:app action:@selector(printActiveWindowPosition:) description:@"Print position of active window"];
-    [argonaut add:@"position -w <id>" target:app action:@selector(printWindowPosition:) description:@"Print position of specific window"];
+    [argonaut add:@"position -w <id|name>" target:app action:@selector(printWindowPosition:) description:@"Print position of specific window"];
     [argonaut add:@"position <x> <y>" target:app action:@selector(setActiveWindowPosition:) description:@"Set position of active window"];
-    [argonaut add:@"position <x> <y> -w <id>" target:app action:@selector(setWindowPosition:) description:@"Set position of specific window"];
+    [argonaut add:@"position <x> <y> -w <id|name>" target:app action:@selector(setWindowPosition:) description:@"Set position of specific window"];
 
     [argonaut add:@"source" target:app action:@selector(printSourceFromActiveTab:) description:@"Print source from active tab"];
     [argonaut add:@"source -t <id>" target:app action:@selector(printSourceFromTab:) description:@"Print source from specific tab"];
